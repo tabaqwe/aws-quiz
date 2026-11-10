@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CLF-C02 Daily Quiz</title>
+<title>Daily Cert Quiz</title>
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--fg:#1d2330;--muted:#667085;--line:#e3e6eb;--accent:#d97706;--ok:#15803d;--okbg:#e8f6ec;--bad:#b42318;--badbg:#fdecea;--sel:#fff4e0}
 @media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b1f27;--fg:#e6e8ec;--muted:#98a2b3;--line:#2c323d;--accent:#f59e0b;--ok:#4ade80;--okbg:#14301f;--bad:#f87171;--badbg:#3a1a1a;--sel:#2e2412}}
@@ -39,20 +39,26 @@ select{background:var(--card);border:1px solid var(--line);border-radius:8px;pad
 .rev small{color:var(--muted)}
 .tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
 .err{color:var(--bad)}
+.pickers{display:flex;gap:8px;flex-wrap:wrap}
+.mixbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;color:var(--muted);font-size:.9rem}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>CLF-C02 Daily Quiz</h1>
-    <select id="day" aria-label="Choose quiz date"></select>
+    <h1 id="title">Daily Quiz</h1>
+    <div class="pickers">
+      <select id="course" aria-label="Choose course"></select>
+      <select id="day" aria-label="Choose quiz date"></select>
+    </div>
   </header>
   <div class="card" id="app">Loading…</div>
 </div>
 <script>
 const L = 'ABCDE';
-const app = document.getElementById('app'), daySel = document.getElementById('day');
-let quiz, i, picks, results, hintShown;
+const app = document.getElementById('app'), daySel = document.getElementById('day'), courseSel = document.getElementById('course');
+const RANDOM = 'random';
+let courses, course, days, quiz, i, picks, results, hintShown, mixSize = 10;
 
 const store = {
   get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
@@ -60,35 +66,86 @@ const store = {
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const same = (a,b) => a.length===b.length && a.every(x=>b.includes(x));
+const getJSON = async url => { const r = await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error(url); return r.json(); };
+const scoreKey = d => `score:${course.id}:${d}`;
+const getScore = d => store.get(scoreKey(d)) || (course.id==='CLF-C02' ? store.get('score:'+d) : null);
+const params = new URLSearchParams(location.search);
 
 async function init(){
   try{
-    const days = (await (await fetch('quizzes/index.json',{cache:'no-store'})).json()).sort().reverse();
-    daySel.innerHTML = days.map(d=>{
-      const s = store.get('score:'+d);
-      return `<option value="${d}">${d}${s?` — ${s.score}/${s.total}`:''}</option>`;
-    }).join('');
-    const want = new URLSearchParams(location.search).get('date');
-    if (want && days.includes(want)) daySel.value = want;
-    daySel.onchange = () => load(daySel.value);
-    load(daySel.value);
+    courses = await getJSON('courses/index.json');
+    courseSel.innerHTML = courses.map(c=>`<option value="${esc(c.id)}">${esc(c.title||c.id)}</option>`).join('');
+    const want = params.get('course');
+    const c = courses.find(x=>x.id===want) || courses.find(x=>x.default) || courses[0];
+    courseSel.onchange = () => selectCourse(courses.find(x=>x.id===courseSel.value));
+    daySel.onchange = () => go(daySel.value);
+    await selectCourse(c, params.get('date'));
   }catch(e){
-    app.innerHTML = `<p class="err">Couldn't load quizzes/index.json.</p><p>Open this page over HTTP (GitHub Pages, or run <code>python3 -m http.server</code> in the repo folder). Browsers block fetch() from file:// URLs.</p>`;
+    app.innerHTML = `<p class="err">Couldn't load the quiz list.</p><p>Open this page over HTTP (GitHub Pages, or run <code>python3 -m http.server</code> in the repo folder). Browsers block fetch() from file:// URLs.</p>`;
   }
+}
+
+async function selectCourse(c, wantDate){
+  course = c; courseSel.value = c.id;
+  document.getElementById('title').textContent = `${c.id} Daily Quiz`;
+  document.title = `${c.id} Daily Quiz`;
+  app.textContent = 'Loading…';
+  days = (await getJSON(`courses/${c.id}/index.json`)).sort().reverse();
+  if (!days.length){ daySel.innerHTML=''; app.textContent = 'No quizzes for this course yet.'; return; }
+  daySel.innerHTML = `<option value="${RANDOM}">🎲 Random mix (all days)</option>` + days.map(d=>{
+    const s = getScore(d);
+    return `<option value="${d}">${d}${s?` — ${s.score}/${s.total}`:''}</option>`;
+  }).join('');
+  daySel.value = (wantDate===RANDOM || days.includes(wantDate)) ? wantDate : days[0];
+  go(daySel.value);
+}
+
+function go(d){
+  const u = new URL(location); u.searchParams.set('course', course.id); u.searchParams.set('date', d);
+  history.replaceState(null,'',u);
+  d===RANDOM ? loadMix() : load(d);
 }
 
 async function load(d){
   app.textContent = 'Loading…';
-  quiz = await (await fetch(`quizzes/${d}.json`,{cache:'no-store'})).json();
+  quiz = await getJSON(`courses/${course.id}/${d}.json`);
   i = 0; results = []; start();
+}
+
+let pool = null, poolCourse = null;
+async function loadMix(){
+  app.textContent = 'Loading all days…';
+  if (poolCourse !== course.id){
+    const all = await Promise.all(days.map(d=>getJSON(`courses/${course.id}/${d}.json`).catch(()=>null)));
+    pool = all.filter(Boolean).flatMap(qz=>qz.questions.map(q=>({...q, from: qz.date})));
+    poolCourse = course.id;
+  }
+  const n = Math.min(mixSize, pool.length);
+  const shuffled = [...pool];
+  for (let k=shuffled.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [shuffled[k],shuffled[j]]=[shuffled[j],shuffled[k]]; }
+  quiz = {date: RANDOM, title: `Random mix — ${n} of ${pool.length} questions`, questions: shuffled.slice(0,n)};
+  i = 0; results = []; start();
+}
+function mixBar(){
+  if (quiz.date!==RANDOM) return '';
+  const sizes = [10,20,30,65].filter(x=>x<pool.length).concat(pool.length<=65?[pool.length]:[]);
+  const cur = Math.min(mixSize, pool.length);
+  return `<div class="mixbar">🎲 ${pool.length} questions from ${days.length} day${days.length>1?'s':''} ·
+    <label>Questions: <select id="mixsize">${sizes.map(x=>`<option value="${x}" ${x===cur?'selected':''}>${x===pool.length?`All (${x})`:x}</option>`).join('')}</select></label>
+    <button class="btn" id="remix">New mix</button></div>`;
+}
+function bindMixBar(){
+  const ms = document.getElementById('mixsize'), rm = document.getElementById('remix');
+  if (ms) ms.onchange = () => { mixSize = +ms.value; loadMix(); };
+  if (rm) rm.onclick = () => loadMix();
 }
 function start(){ picks = []; hintShown = false; render(); }
 
 function render(){
   const q = quiz.questions[i], n = quiz.questions.length, done = results[i];
   const multi = q.answer.length > 1;
-  app.innerHTML = `
-    <div class="meta"><span>Question ${i+1} / ${n}</span><span class="tag">${esc(q.domain||'')}</span></div>
+  app.innerHTML = `${i===0&&!done?mixBar():''}
+    <div class="meta"><span>Question ${i+1} / ${n}${q.from?` · from ${q.from}`:''}</span><span class="tag">${esc(q.domain||'')}</span></div>
     <div class="bar"><i style="width:${(i/n)*100}%"></i></div>
     <p class="q">${esc(q.q)}</p>
     ${multi?`<div class="multi">Choose ${q.answer.length}.</div>`:''}
@@ -112,6 +169,7 @@ function render(){
     else picks = [k];
     render();
   });
+  bindMixBar();
   const $ = id => document.getElementById(id);
   if ($('hint')) $('hint').onclick = () => { hintShown = true; render(); };
   if ($('check')) $('check').onclick = () => { results[i] = {picks, ok: same(picks,q.answer), hint: hintShown}; render(); };
@@ -120,22 +178,25 @@ function render(){
 
 function summary(){
   const n = quiz.questions.length, score = results.filter(r=>r.ok).length;
-  const prev = store.get('score:'+quiz.date);
-  if (!prev || score >= prev.score) store.set('score:'+quiz.date, {score, total:n});
-  const opt = daySel.querySelector(`option[value="${quiz.date}"]`);
-  if (opt) opt.textContent = `${quiz.date} — ${Math.max(score, prev?prev.score:0)}/${n}`;
+  if (quiz.date !== RANDOM){
+    const prev = getScore(quiz.date);
+    if (!prev || score >= prev.score) store.set(scoreKey(quiz.date), {score, total:n});
+    const opt = daySel.querySelector(`option[value="${quiz.date}"]`);
+    if (opt) opt.textContent = `${quiz.date} — ${Math.max(score, prev?prev.score:0)}/${n}`;
+  }
   const byDomain = {};
   quiz.questions.forEach((q,k)=>{ const d=q.domain||'Other'; byDomain[d]=byDomain[d]||[0,0]; byDomain[d][1]++; if(results[k].ok) byDomain[d][0]++; });
   app.innerHTML = `
     <p class="score">${score} / ${n}</p>
-    <p style="color:var(--muted);margin-top:4px">${score>=7?'Above the ~70% passing bar.':'Below the ~70% passing bar (700/1000 scaled). Review the misses below.'}</p>
+    <p style="color:var(--muted);margin-top:4px">${score/n>=0.7?'Above the ~70% passing bar.':'Below the ~70% passing bar (700/1000 scaled). Review the misses below.'}</p>
     <p>${Object.entries(byDomain).map(([d,[a,t]])=>`<span class="tag">${esc(d)}: ${a}/${t}</span>`).join(' ')}</p>
     ${quiz.questions.map((q,k)=>{ const r = results[k]; return `
-      <div class="rev"><div>${r.ok?'✅':'❌'} <strong>${k+1}.</strong> ${esc(q.q)}</div>
+      <div class="rev"><div>${r.ok?'✅':'❌'} <strong>${k+1}.</strong> ${esc(q.q)}${q.from?` <small>(${q.from})</small>`:''}</div>
       <small>Your answer: ${r.picks.map(p=>L[p]).join(', ')} · Correct: ${q.answer.map(a=>L[a]+'. '+esc(q.options[a])).join('; ')}${r.hint?' · used hint':''}</small>
       ${r.ok?'':`<div style="margin-top:6px;font-size:.95rem">${esc(q.explanation)}</div>`}</div>`; }).join('')}
-    <div class="row"><button class="btn primary" id="retry">Retry this quiz</button></div>`;
+    <div class="row"><button class="btn primary" id="retry">Retry this quiz</button>${quiz.date===RANDOM?'<button class="btn" id="remix2">New random mix</button>':''}</div>`;
   document.getElementById('retry').onclick = () => { i = 0; results = []; start(); };
+  const rm = document.getElementById('remix2'); if (rm) rm.onclick = () => loadMix();
 }
 init();
 </script>

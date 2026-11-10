@@ -1,9 +1,8 @@
-# CLF-C02 Daily Quiz
+# Daily Cert Quiz
 
-Interactive practice quizzes for AWS Certified Cloud Practitioner (CLF-C02).
+**▶ [Open the quiz](https://tabaqwe.github.io/aws-quiz/)** · [random mix](https://tabaqwe.github.io/aws-quiz/?course=CLF-C02&date=random)
 
-- `index.html`: the quiz player (pick a date, answer, get hints and explanations, see your score)
-- `quizzes/YYYY-MM-DD.json`: one quiz per day
-- `quizzes/index.json`: list of available dates
+Daily practice quizzes, one per day per course. Default course: AWS Certified Cloud Practitioner (CLF-C02).
 
-Run it locally with `python3 -m http.server` and open http://localhost:8000, or turn on GitHub Pages (Settings → Pages → deploy from branch `master`, root).
+- `courses/index.json`: list of courses
+- `courses/<id>/YYYY-MM-DD.json`: daily quizzes, listed in `courses/<id>/index.json`
