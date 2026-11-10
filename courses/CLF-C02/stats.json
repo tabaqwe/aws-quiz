@@ -40,6 +40,52 @@
     ]
    },
    "issue": 1
+  },
+  {
+   "quiz": "2026-11-10",
+   "score": 1,
+   "total": 10,
+   "startedAt": "2026-11-10T22:53:42.626Z",
+   "finishedAt": "2026-11-10T22:54:12.973Z",
+   "tz": "Asia/Jerusalem",
+   "durationSec": 13,
+   "secPerQuestion": [
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "hints": 0,
+   "byDomain": {
+    "Cloud Concepts": [
+     1,
+     2
+    ],
+    "Security & Compliance": [
+     0,
+     3
+    ],
+    "Cloud Technology & Services": [
+     0,
+     3
+    ],
+    "Billing, Pricing & Support": [
+     0,
+     2
+    ]
+   },
+   "questions": 10,
+   "answered": 10,
+   "status": "complete",
+   "issues": [
+    2
+   ]
   }
  ],
  "opens": [
@@ -54,6 +100,18 @@
   {
    "quiz": "2026-11-10",
    "at": "2026-11-10T22:40:36.592Z"
+  },
+  {
+   "quiz": "2026-11-10",
+   "at": "2026-11-10T22:52:50.580Z"
+  },
+  {
+   "quiz": "2026-11-10",
+   "at": "2026-11-10T22:52:53.056Z"
+  },
+  {
+   "quiz": "2026-11-10",
+   "at": "2026-11-10T22:53:42.626Z"
   }
  ]
 }

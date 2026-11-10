@@ -6,7 +6,7 @@
   "answer": [
    "Operations"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -21,12 +21,12 @@
   "answer": [
    "Denied, because an explicit deny overrides any allow"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
   "lastPicked": [
-   "Allowed, because the most permissive policy wins"
+   "Denied only if the user did not sign in with MFA"
   ]
  },
  {
@@ -36,7 +36,7 @@
   "answer": [
    "AWS Config rules with remediation"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -51,7 +51,7 @@
   "answer": [
    "Create an IAM role in each member account that trusts the security account, and have auditors assume it through AWS STS"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -66,7 +66,7 @@
   "answer": [
    "AWS Step Functions"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -81,7 +81,7 @@
   "answer": [
    "AWS Transit Gateway"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -96,7 +96,7 @@
   "answer": [
    "Amazon Neptune"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -111,7 +111,7 @@
   "answer": [
    "Dedicated Hosts"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
@@ -126,7 +126,7 @@
   "answer": [
    "AWS Cost Anomaly Detection"
   ],
-  "misses": 1,
+  "misses": 2,
   "firstMissed": "2026-11-10",
   "status": "open",
   "lastMissed": "2026-11-10",
