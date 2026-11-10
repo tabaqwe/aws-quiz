@@ -80,20 +80,37 @@ for r in res:
     by_domain[d][1] += 1
     by_domain[d][0] += bool(r.get("ok"))
 times = [int(r["t"]) for r in res if isinstance(r.get("t"), (int, float))]
-started, finished = str(data.get("startedAt", "")), str(data.get("finishedAt", ""))
-session = {
+started, finished_at = str(data.get("startedAt", "")), str(data.get("finishedAt", ""))
+questions = int(data.get("questions", total) or total)
+answered = int(data.get("answered", total) or total)
+finished = bool(data.get("finished", True))
+chunk = {
     "quiz": quiz_id, "score": score, "total": total,
     "startedAt": started if ISO.fullmatch(started) else None,
-    "finishedAt": finished if ISO.fullmatch(finished) else datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "finishedAt": finished_at if ISO.fullmatch(finished_at) else datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     "tz": str(data.get("tz", ""))[:40],
     "durationSec": sum(times),
     "secPerQuestion": [int(r["t"]) if isinstance(r.get("t"), (int, float)) else None for r in res],
     "hints": sum(bool(r.get("hint")) for r in res),
     "byDomain": by_domain,
-    "issue": int(os.environ.get("ISSUE_NUMBER", "0") or 0),
+    "questions": questions, "answered": answered,
+    "status": "complete" if finished else "partial",
+    "issues": [int(os.environ.get("ISSUE_NUMBER", "0") or 0)],
 }
-if not any(x["finishedAt"] == session["finishedAt"] for x in stats["sessions"]):
+# a session sent in several chunks (partial, then the rest) shares startedAt: merge it
+session = next((x for x in stats["sessions"] if chunk["startedAt"] and x.get("startedAt") == chunk["startedAt"] and x["quiz"] == quiz_id), None)
+if session is None:
+    session = chunk
     stats["sessions"].append(session)
+else:
+    for k in ("score", "total", "durationSec", "hints"):
+        session[k] += chunk[k]
+    session["secPerQuestion"] += chunk["secPerQuestion"]
+    for d, (c, t) in by_domain.items():
+        cur = session.setdefault("byDomain", {}).setdefault(d, [0, 0])
+        cur[0] += c; cur[1] += t
+    session["issues"] = session.get("issues", []) + chunk["issues"]
+    session.update(finishedAt=chunk["finishedAt"], answered=answered, questions=questions, status=chunk["status"])
 seen = {(o["quiz"], o["at"]) for o in stats["opens"]}
 for o in data.get("opens", []) or []:
     qz, at = str(o.get("quiz", "")), str(o.get("at", ""))
@@ -104,11 +121,11 @@ spath.write_text(json.dumps(stats, indent=1, ensure_ascii=False) + "\n")
 
 open_n = sum(x["status"] == "open" for x in mistakes)
 short = lambda x: f"- **{x['domain']}**: {x['q'][:110]}{'…' if len(x['q']) > 110 else ''}"
-lines = [f"Recorded **{score}/{total}** for `{course}` {quiz_id}.", ""]
+lines = [f"Recorded **{score}/{total}** for `{course}` {quiz_id}" + ("." if finished else f" — **partial**, {answered}/{questions} answered so far."), ""]
 if new:   lines += [f"**New mistakes ({len(new)})** → homework in upcoming quizzes:"] + [short(x) for x in new] + [""]
 if again: lines += [f"**Missed again ({len(again)})** → stays on the homework list:"] + [short(x) for x in again] + [""]
 if fixed: lines += [f"**Fixed ({len(fixed)})** ✅ removed from homework:"] + [short(x) for x in fixed] + [""]
-lines.append(f"Time: **{session['durationSec'] // 60}m {session['durationSec'] % 60}s** ({session['hints']} hints) · Open homework items: **{open_n}**")
+lines.append(f"Session time: **{session['durationSec'] // 60}m {session['durationSec'] % 60}s** ({session['hints']} hints) · Open homework items: **{open_n}**")
 Path("summary.md").write_text("\n".join(lines) + "\n")
 
 with open(os.environ.get("GITHUB_OUTPUT", os.devnull), "a") as out:

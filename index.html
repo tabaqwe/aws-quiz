@@ -45,6 +45,27 @@ table.st th{color:var(--muted);font-weight:500}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 18px}
 .kpi{border:1px solid var(--line);border-radius:10px;padding:10px}.kpi b{display:block;font-size:1.3rem}.kpi small{color:var(--muted)}
 h2{font-size:1.05rem;margin:18px 0 4px}
+.chart{margin:6px 0 4px}.chart svg{display:block;width:100%;height:auto;overflow:visible;font-size:11px}
+#c-heat svg{font-size:5.5px}
+.chart text{fill:var(--muted);font-variant-numeric:tabular-nums}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .ref{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+.chart .bar{fill:var(--accent)}.chart .bar.dim{fill:var(--line)}
+.chart .line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+.chart .dot{fill:var(--accent);stroke:var(--card);stroke-width:2}
+.chart .hit{fill:transparent;cursor:default}
+.chart .hit:hover+.bar,.chart g:hover .bar{opacity:.8}
+.cell{stroke:var(--card);stroke-width:2}
+:root{--h0:var(--line);--h1:#b7d3f6;--h2:#6da7ec;--h3:#2a78d6;--h4:#184f95}
+@media (prefers-color-scheme:dark){:root{--h1:#184f95;--h2:#256abf;--h3:#3987e5;--h4:#86b6ef}}
+.legend{display:flex;gap:4px;align-items:center;color:var(--muted);font-size:.75rem;justify-content:flex-end}
+.legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
+.sub{color:var(--muted);font-size:.85rem;margin:0 0 6px}
+.hero{font-size:3rem;font-weight:600;line-height:1.1}
+.seg{display:flex;gap:2px;height:8px;border-radius:4px;overflow:hidden;margin:8px 0 4px}
+.seg i{display:block;height:100%}
+#tip{position:fixed;pointer-events:none;background:var(--fg);color:var(--bg);font-size:.8rem;padding:6px 8px;border-radius:6px;max-width:240px;z-index:9;display:none;line-height:1.35}
+details summary{cursor:pointer;color:var(--muted);margin-top:14px}
 .tag.hw{border-color:var(--accent);color:var(--accent)}
 .pickers{display:flex;gap:8px;flex-wrap:wrap}
 .mixbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;color:var(--muted);font-size:.9rem}
@@ -61,6 +82,7 @@ h2{font-size:1.05rem;margin:18px 0 4px}
     </div>
   </header>
   <div class="card" id="app">Loading…</div>
+  <div id="tip"></div>
 </div>
 <script>
 const L = 'ABCDE';
@@ -74,7 +96,8 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) qActive += Date.now() - qMark; else qMark = Date.now();
 });
 const qElapsed = () => qActive + (document.hidden ? 0 : Date.now() - qMark);
-function beginSession(){ i = 0; results = []; startedAt = new Date().toISOString(); }
+let sentCount = 0;  // answers already sent from this session
+function beginSession(){ i = 0; results = []; sentCount = 0; startedAt = new Date().toISOString(); }
 const opensKey = () => `opens:${course.id}`;
 function logOpen(d){ const o = store.get(opensKey()) || []; o.push({quiz: d, at: new Date().toISOString()}); store.set(opensKey(), o.slice(-500)); }
 
@@ -180,6 +203,7 @@ function render(){
         ? `<button class="btn primary" id="next">${i+1<n?'Next question':'See results'}</button>`
         : `<button class="btn primary" id="check" ${picks.length===q.answer.length?'':'disabled'}>Check answer</button>
            <button class="btn" id="hint" ${hintShown||!q.hint?'disabled':''}>Hint</button>`}
+      ${answered() > sentCount ? `<button class="btn" id="sendmid" style="margin-left:auto" title="Send the answers so far; the rest can be sent later">Send progress (${answered()}/${n})</button>` : ''}
     </div>`;
   app.querySelectorAll('.opt:not(:disabled)').forEach(b => b.onclick = () => {
     const k = +b.dataset.k;
@@ -191,6 +215,7 @@ function render(){
   const $ = id => document.getElementById(id);
   if ($('hint')) $('hint').onclick = () => { hintShown = true; render(); };
   if ($('check')) $('check').onclick = () => { results[i] = {picks, ok: same(picks,q.answer), hint: hintShown, t: Math.round(qElapsed()/1000)}; render(); };
+  if ($('sendmid')) $('sendmid').onclick = sendResults;
   if ($('next')) $('next').onclick = () => { if (++i < n) start(); else summary(); };
 }
 
@@ -212,23 +237,29 @@ function summary(){
       <div class="rev"><div>${r.ok?'✅':'❌'} <strong>${k+1}.</strong> ${esc(q.q)}${q.from?` <small>(${q.from})</small>`:''}</div>
       <small>Your answer: ${r.picks.map(p=>L[p]).join(', ')} · Correct: ${q.answer.map(a=>L[a]+'. '+esc(q.options[a])).join('; ')}${r.hint?' · used hint':''}</small>
       ${r.ok?'':`<div style="margin-top:6px;font-size:.95rem">${esc(q.explanation)}</div>`}</div>`; }).join('')}
-    <div class="row"><button class="btn primary" id="send">Send results to GitHub</button><button class="btn" id="retry">Retry this quiz</button>${quiz.date===RANDOM?'<button class="btn" id="remix2">New random mix</button>':''}</div>`;
-  document.getElementById('send').onclick = sendResults;
+    <div class="row">${answered()>sentCount?`<button class="btn primary" id="send">Send results to GitHub${sentCount?` (${answered()-sentCount} new)`:''}</button>`:'<span class="sub" style="align-self:center">✓ Sent</span>'}<button class="btn" id="retry">Retry this quiz</button>${quiz.date===RANDOM?'<button class="btn" id="remix2">New random mix</button>':''}</div>`;
+  const sb = document.getElementById('send'); if (sb) sb.onclick = () => { sendResults(); summary(); };
   document.getElementById('retry').onclick = () => { beginSession(); start(); };
   const rm = document.getElementById('remix2'); if (rm) rm.onclick = () => loadMix();
 }
+const answered = () => results.filter(Boolean).length;
 function sendResults(){
-  const n = quiz.questions.length, score = results.filter(r=>r.ok).length;
+  const n = quiz.questions.length, done = answered();
+  const idx = [...Array(n).keys()].filter(k => results[k] && k >= sentCount);
+  if (!idx.length){ alert('Nothing new to send — these answers were already sent.'); return; }
+  const score = idx.filter(k=>results[k].ok).length, finished = done === n;
   const opens = store.get(opensKey()) || [];
-  const data = {course: course.id, quiz: quiz.date, score, total: n,
+  const data = {course: course.id, quiz: quiz.date, score, total: idx.length, questions: n, answered: done, finished,
     startedAt, finishedAt: new Date().toISOString(), tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    results: quiz.questions.map((q,k)=>({id: `${q.from||quiz.date}#${q.idx ?? k}`, ok: results[k].ok, picked: results[k].picks, t: results[k].t, hint: results[k].hint})),
+    results: idx.map(k=>{ const q = quiz.questions[k]; return {id: `${q.from||quiz.date}#${q.idx ?? k}`, ok: results[k].ok, picked: results[k].picks, t: results[k].t, hint: results[k].hint}; }),
     opens};
-  const wrong = quiz.questions.filter((q,k)=>!results[k].ok).length;
-  const title = `Quiz results: ${course.id} ${quiz.date} — ${score}/${n}`;
-  const body = `${score}/${n} correct, ${wrong} mistake${wrong===1?'':'s'}. Click **Create** — a GitHub Action records the mistakes as homework for the next quiz.\n\n\`\`\`json\n${JSON.stringify(data)}\n\`\`\`\n`;
+  const wrong = idx.length - score;
+  const title = `Quiz results: ${course.id} ${quiz.date} — ${score}/${idx.length}${finished && !sentCount ? '' : ` (${finished?'finished':'partial'} ${done}/${n})`}`;
+  const body = `${score}/${idx.length} correct, ${wrong} mistake${wrong===1?'':'s'}${finished?'':` — quiz not finished (${done}/${n} answered)`}. Click **Create**: a GitHub Action records the mistakes as homework for the next quiz.\n\n\`\`\`json\n${JSON.stringify(data)}\n\`\`\`\n`;
   window.open(`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`, '_blank');
   store.set(opensKey(), []);  // these opens now travel with the issue
+  sentCount = Math.max(...idx) + 1;
+  if (!finished) render();
 }
 
 // --- stats view ---
@@ -236,38 +267,127 @@ const fmtDur = s => s >= 3600 ? `${Math.floor(s/3600)}h ${Math.round(s%3600/60)}
 const fmtAt = iso => new Date(iso).toLocaleString([], {dateStyle:'medium', timeStyle:'short'});
 async function showStats(){
   app.textContent = 'Loading stats…';
-  let st = {sessions: [], opens: []};
+  let st = {sessions: [], opens: []}, mistakes = [];
   try { st = await getJSON(`courses/${course.id}/stats.json`); } catch(e) {}
-  const ses = [...st.sessions].sort((a,b)=>b.finishedAt.localeCompare(a.finishedAt));
+  try { mistakes = await getJSON(`courses/${course.id}/mistakes.json`); } catch(e) {}
+  const ses = [...st.sessions].sort((a,b)=>a.finishedAt.localeCompare(b.finishedAt));
   const pending = store.get(opensKey()) || [];
-  const opens = [...st.opens, ...pending];
+  const opens = [...st.opens, ...pending].sort((a,b)=>b.at.localeCompare(a.at));
+  const dayOf = iso => new Date(iso).toLocaleDateString('en-CA');           // local YYYY-MM-DD
   const qs = ses.reduce((a,x)=>a+x.total,0), ok = ses.reduce((a,x)=>a+x.score,0), secs = ses.reduce((a,x)=>a+x.durationSec,0);
-  const dayset = new Set(ses.map(x=>x.finishedAt.slice(0,10)));
-  let streak = 0; for (let d = new Date(); dayset.has(d.toISOString().slice(0,10)); d.setDate(d.getDate()-1)) streak++;
+  const perDay = {};  // day -> {sec, n, opens, score, total}
+  const bump = (d,k,v) => { perDay[d] = perDay[d] || {sec:0,n:0,opens:0,score:0,total:0}; perDay[d][k] += v; };
+  ses.forEach(x=>{ const d=dayOf(x.finishedAt); bump(d,'sec',x.durationSec); bump(d,'n',1); bump(d,'score',x.score); bump(d,'total',x.total); });
+  opens.forEach(o=>bump(dayOf(o.at),'opens',1));
+  let streak = 0; for (let d = new Date(); perDay[dayOf(d.toISOString())]?.n; d.setDate(d.getDate()-1)) streak++;
   const dom = {};
   ses.forEach(x=>Object.entries(x.byDomain||{}).forEach(([d,[a,t]])=>{ dom[d]=dom[d]||[0,0]; dom[d][0]+=a; dom[d][1]+=t; }));
-  const pct = (a,b) => b ? Math.round(100*a/b)+'%' : '—';
+  const pct = (a,b) => b ? Math.round(100*a/b) : null;
+  const hwOpen = mistakes.filter(m=>m.status==='open').length, hwDone = mistakes.length - hwOpen;
+  const acc = pct(ok,qs);
+
   app.innerHTML = `
     <div class="meta"><span>${esc(course.id)} statistics</span><button class="btn" id="back">← Back to quiz</button></div>
-    <div class="kpis">
-      <div class="kpi"><b>${ses.length}</b><small>quizzes completed</small></div>
-      <div class="kpi"><b>${opens.length}</b><small>times opened</small></div>
-      <div class="kpi"><b>${fmtDur(secs)}</b><small>total time</small></div>
-      <div class="kpi"><b>${qs?fmtDur(Math.round(secs/qs)):'—'}</b><small>avg per question</small></div>
-      <div class="kpi"><b>${pct(ok,qs)}</b><small>accuracy (${ok}/${qs})</small></div>
-      <div class="kpi"><b>${streak}</b><small>day streak</small></div>
+    ${!ses.length ? `<p class="sub">No sessions recorded yet. Finish a quiz and use “Send results to GitHub”. Charts fill in from there.</p>` : ''}
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin:6px 0 4px">
+      <div><div class="hero">${acc===null?'—':acc+'%'}</div><div class="sub">overall accuracy · ${ok}/${qs} · pass bar 70%</div></div>
     </div>
-    ${Object.keys(dom).length?`<h2>By domain</h2><table class="st"><tr><th>Domain</th><th>Correct</th><th>Accuracy</th></tr>
-      ${Object.entries(dom).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1]).map(([d,[a,t]])=>`<tr><td>${esc(d)}</td><td>${a}/${t}</td><td>${pct(a,t)}</td></tr>`).join('')}</table>`:''}
-    <h2>Sessions</h2>
-    ${ses.length?`<table class="st"><tr><th>Finished</th><th>Quiz</th><th>Score</th><th>Time</th><th>Hints</th></tr>
-      ${ses.map(x=>`<tr><td>${fmtAt(x.finishedAt)}</td><td>${esc(x.quiz)}</td><td>${x.score}/${x.total}</td><td>${fmtDur(x.durationSec)}</td><td>${x.hints||0}</td></tr>`).join('')}</table>`
-      :'<p style="color:var(--muted)">No sessions recorded yet. Finish a quiz and use “Send results to GitHub”.</p>'}
-    <h2>Opens</h2>
-    <p style="color:var(--muted);font-size:.9rem">${pending.length?`${pending.length} on this device not sent yet (they go with your next results). `:''}Latest 20:</p>
-    <table class="st"><tr><th>When</th><th>Quiz</th></tr>
-      ${opens.sort((a,b)=>b.at.localeCompare(a.at)).slice(0,20).map(o=>`<tr><td>${fmtAt(o.at)}</td><td>${esc(o.quiz)}</td></tr>`).join('')}</table>`;
+    <div class="kpis">
+      <div class="kpi"><b>${ses.filter(x=>x.status!=='partial').length}</b><small>quizzes completed</small></div>
+      <div class="kpi"><b>${ses.filter(x=>x.status==='partial').length}</b><small>left unfinished</small></div>
+      <div class="kpi"><b>${opens.length}</b><small>times opened</small></div>
+      <div class="kpi"><b>${fmtDur(secs)}</b><small>total study time</small></div>
+      <div class="kpi"><b>${qs?fmtDur(Math.round(secs/qs)):'—'}</b><small>avg per question</small></div>
+      <div class="kpi"><b>${streak}</b><small>day streak</small></div>
+      <div class="kpi"><b>${hwOpen}</b><small>open homework</small></div>
+    </div>
+    <h2>Activity</h2><p class="sub">Study time per day, last 12 weeks</p>
+    <div class="chart" id="c-heat"></div>
+    <h2>Accuracy over time</h2><p class="sub">Each dot is one quiz (hollow = unfinished); dashed line = 70% pass bar</p>
+    <div class="chart" id="c-acc"></div>
+    <h2>Minutes per day</h2><p class="sub">Last 14 days</p>
+    <div class="chart" id="c-min"></div>
+    <h2>By domain</h2><p class="sub">Weakest first; tick = 70%</p>
+    <div class="chart" id="c-dom"></div>
+    <h2>Homework</h2>
+    ${mistakes.length ? `<div class="seg"><i style="flex:${hwDone};background:var(--ok)"></i><i style="flex:${hwOpen};background:var(--accent)"></i></div>
+      <p class="sub">✅ ${hwDone} fixed · 📝 ${hwOpen} open of ${mistakes.length} mistakes</p>` : '<p class="sub">No mistakes recorded yet.</p>'}
+    <details><summary>Session log (${ses.length})</summary>
+      <table class="st"><tr><th>Finished</th><th>Quiz</th><th>Score</th><th>Time</th><th>Hints</th></tr>
+      ${[...ses].reverse().map(x=>`<tr><td>${fmtAt(x.finishedAt)}</td><td>${esc(x.quiz)}</td><td>${x.score}/${x.total}${x.status==='partial'?` <span class="tag">partial ${x.answered}/${x.questions}</span>`:''}</td><td>${fmtDur(x.durationSec)}</td><td>${x.hints||0}</td></tr>`).join('')}</table></details>
+    <details><summary>Opens (${opens.length}${pending.length?`, ${pending.length} on this device not sent yet`:''})</summary>
+      <table class="st"><tr><th>When</th><th>Quiz</th></tr>${opens.slice(0,50).map(o=>`<tr><td>${fmtAt(o.at)}</td><td>${esc(o.quiz)}</td></tr>`).join('')}</table></details>`;
   document.getElementById('back').onclick = () => go(daySel.value);
+
+  // ---- activity heatmap (sequential, one hue) ----
+  const W = 700, cell = 13, gap = 3, weeks = 12;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const startD = new Date(today); startD.setDate(startD.getDate() - (weeks-1)*7 - ((today.getDay()+6)%7));  // Monday, 11 weeks back
+  const maxSec = Math.max(1, ...Object.values(perDay).map(v=>v.sec));
+  const lvl = sec => !sec ? 0 : Math.min(4, 1 + Math.floor(3.999 * sec / maxSec));
+  let cells = '', months = '';
+  for (let w=0; w<weeks; w++) for (let dw=0; dw<7; dw++){
+    const d = new Date(startD); d.setDate(startD.getDate() + w*7 + dw);
+    if (d > today) continue;
+    const key = d.toLocaleDateString('en-CA'), v = perDay[key];
+    const tip = `${d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'})}<br>${v?.n?`${v.n} quiz${v.n>1?'zes':''} · ${fmtDur(v.sec)} · ${v.score}/${v.total}`:'no quizzes'}${v?.opens?`<br>${v.opens} open${v.opens>1?'s':''}`:''}`;
+    cells += `<rect class="cell" x="${30+w*(cell+gap)}" y="${16+dw*(cell+gap)}" width="${cell}" height="${cell}" rx="3" fill="var(--h${lvl(v?.sec)})" data-tip="${esc(tip)}"/>`;
+    if (dw===0 && d.getDate()<=7) months += `<text x="${30+w*(cell+gap)}" y="10">${d.toLocaleDateString([], {month:'short'})}</text>`;
+  }
+  const dl = ['Mon','','Wed','','Fri','',''].map((t,k)=>t?`<text x="0" y="${16+k*(cell+gap)+10}">${t}</text>`:'').join('');
+  const hw = 30 + weeks*(cell+gap);
+  document.getElementById('c-heat').innerHTML = `<svg viewBox="0 0 ${hw} ${16+7*(cell+gap)}" style="max-width:${Math.round(hw*2.2)}px;font-size:5.5px">${months}${dl}${cells}</svg>
+    <div class="legend">less ${[0,1,2,3,4].map(k=>`<i style="background:var(--h${k})"></i>`).join('')} more</div>`;
+
+  // ---- accuracy line ----
+  const accEl = document.getElementById('c-acc');
+  if (ses.length){
+    const H = 180, L = 34, R = 52, T = 10, B = 24, pw = W-L-R, ph = H-T-B;
+    const xs = k => L + (ses.length===1 ? pw/2 : k*pw/(ses.length-1)), ys = v => T + ph*(1 - v/100);
+    const grid = [0,25,50,75,100].map(v=>`<line class="grid" x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}"/><text x="${L-6}" y="${ys(v)+4}" text-anchor="end">${v}%</text>`).join('');
+    const pts = ses.map((x,k)=>[xs(k), ys(100*x.score/x.total)]);
+    const path = pts.map((p,k)=>(k?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const step = Math.max(1, Math.ceil(ses.length/6));
+    const xl = ses.map((x,k)=>k%step===0||k===ses.length-1?`<text x="${xs(k)}" y="${H-6}" text-anchor="middle">${new Date(x.finishedAt).toLocaleDateString([], {month:'short',day:'numeric'})}</text>`:'').join('');
+    const dots = ses.map((x,k)=>`<g data-tip="${esc(`${fmtAt(x.finishedAt)}<br>${x.quiz==='random'?'Random mix':x.quiz}: <b>${x.score}/${x.total}</b> (${Math.round(100*x.score/x.total)}%)${x.status==='partial'?`<br>unfinished: ${x.answered}/${x.questions} answered`:''}<br>${fmtDur(x.durationSec)}`)}"><circle class="hit" cx="${pts[k][0]}" cy="${pts[k][1]}" r="12"/><circle class="dot" cx="${pts[k][0]}" cy="${pts[k][1]}" r="5" ${x.status==='partial'?'style="fill:var(--card);stroke:var(--accent)"':''}/></g>`).join('');
+    accEl.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${grid}<line class="ref" x1="${L}" x2="${W-R}" y1="${ys(70)}" y2="${ys(70)}"/><text x="${W-R+6}" y="${ys(70)+4}">pass</text>${ses.length>1?`<path class="line" d="${path}"/>`:''}${dots}${xl}</svg>`;
+  } else accEl.innerHTML = '<p class="sub">—</p>';
+
+  // ---- minutes per day, last 14 days ----
+  { const H = 150, L = 34, R = 10, T = 14, B = 24, pw = W-L-R, ph = H-T-B, n = 14;
+    const days14 = [...Array(n)].map((_,k)=>{ const d = new Date(today); d.setDate(d.getDate()-(n-1-k)); return d; });
+    const mins = days14.map(d=>(perDay[d.toLocaleDateString('en-CA')]?.sec||0)/60);
+    const maxM = Math.max(5, Math.ceil(Math.max(...mins)/5)*5);
+    const bw = pw/n, ys = v => T + ph*(1 - v/maxM);
+    const grid = [0, maxM/2, maxM].map(v=>`<line class="grid" x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}"/><text x="${L-6}" y="${ys(v)+4}" text-anchor="end">${Math.round(v)}m</text>`).join('');
+    const bars = days14.map((d,k)=>{ const m = mins[k], h = Math.max(m?3:0, ph - (ys(m)-T)), x = L + k*bw + bw*0.2, w = bw*0.6, y = T+ph-h;
+      const tip = `${d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'})}<br>${m?fmtDur(Math.round(m*60)):'no study time'}`;
+      return `<g data-tip="${esc(tip)}"><rect class="hit" x="${L+k*bw}" y="${T}" width="${bw}" height="${ph}"/>${h?`<path class="bar" d="M${x} ${T+ph}V${y+4}a4 4 0 0 1 4 -4h${w-8}a4 4 0 0 1 4 4V${T+ph}Z"/>`:''}</g>`
+        + (k%2===n%2?'':`<text x="${L+k*bw+bw/2}" y="${H-6}" text-anchor="middle">${d.getDate()}</text>`); }).join('');
+    document.getElementById('c-min').innerHTML = `<svg viewBox="0 0 ${W} ${H}">${grid}${bars}</svg>`; }
+
+  // ---- domain accuracy, horizontal bars ----
+  { const rows = Object.entries(dom).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1]);
+    const el = document.getElementById('c-dom');
+    if (!rows.length){ el.innerHTML = '<p class="sub">—</p>'; }
+    else { const L = 200, R = 60, rh = 30, H = rows.length*rh + 6, pw = W-L-R;
+      const out = rows.map(([d,[a,t]],k)=>{ const p = a/t, y = k*rh + 6, w = Math.max(p? 4:0, p*pw);
+        return `<g data-tip="${esc(`${d}<br>${a}/${t} correct (${Math.round(100*p)}%)`)}"><rect class="hit" x="0" y="${y-4}" width="${W}" height="${rh}"/>
+          <text x="${L-10}" y="${y+12}" text-anchor="end" style="fill:var(--fg)">${esc(d)}</text>
+          <rect class="bar dim" x="${L}" y="${y+2}" width="${pw}" height="12" rx="4"/>
+          ${w?`<rect class="bar" x="${L}" y="${y+2}" width="${w}" height="12" rx="4"/>`:''}
+          <line class="ref" x1="${L+0.7*pw}" x2="${L+0.7*pw}" y1="${y-2}" y2="${y+18}"/>
+          <text x="${L+pw+8}" y="${y+12}">${Math.round(100*p)}% · ${a}/${t}</text></g>`; }).join('');
+      el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${out}</svg>`; } }
+
+  // ---- shared tooltip ----
+  const tip = document.getElementById('tip');
+  app.querySelectorAll('[data-tip]').forEach(el=>{
+    el.addEventListener('mousemove', e=>{ tip.innerHTML = el.dataset.tip; tip.style.display='block';
+      const x = Math.min(e.clientX+12, innerWidth - tip.offsetWidth - 8); tip.style.left = x+'px'; tip.style.top = (e.clientY+14)+'px'; });
+    el.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
+    el.addEventListener('click', e=>{ tip.innerHTML = el.dataset.tip; tip.style.display='block'; tip.style.left = Math.min(e.clientX, innerWidth-tip.offsetWidth-8)+'px'; tip.style.top=(e.clientY+14)+'px'; });
+  });
 }
 document.getElementById('statsbtn').onclick = () => course && showStats();
 init();
