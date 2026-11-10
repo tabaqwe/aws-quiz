@@ -67,13 +67,48 @@ for r in data.get("results", []):
 
 mpath.write_text(json.dumps(mistakes, indent=1, ensure_ascii=False) + "\n")
 
+# --- stats.json: one entry per finished session, plus every recorded open ---
+ISO = re.compile(r"\d{4}-\d{2}-\d{2}T[\d:.]+Z")
+spath = cdir / "stats.json"
+stats = json.loads(spath.read_text()) if spath.exists() else {"sessions": [], "opens": []}
+res = data.get("results", [])
+by_domain = {}
+for r in res:
+    q = question(r["id"])
+    d = (q or {}).get("domain", "Other")
+    by_domain.setdefault(d, [0, 0])
+    by_domain[d][1] += 1
+    by_domain[d][0] += bool(r.get("ok"))
+times = [int(r["t"]) for r in res if isinstance(r.get("t"), (int, float))]
+started, finished = str(data.get("startedAt", "")), str(data.get("finishedAt", ""))
+session = {
+    "quiz": quiz_id, "score": score, "total": total,
+    "startedAt": started if ISO.fullmatch(started) else None,
+    "finishedAt": finished if ISO.fullmatch(finished) else datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "tz": str(data.get("tz", ""))[:40],
+    "durationSec": sum(times),
+    "secPerQuestion": [int(r["t"]) if isinstance(r.get("t"), (int, float)) else None for r in res],
+    "hints": sum(bool(r.get("hint")) for r in res),
+    "byDomain": by_domain,
+    "issue": int(os.environ.get("ISSUE_NUMBER", "0") or 0),
+}
+if not any(x["finishedAt"] == session["finishedAt"] for x in stats["sessions"]):
+    stats["sessions"].append(session)
+seen = {(o["quiz"], o["at"]) for o in stats["opens"]}
+for o in data.get("opens", []) or []:
+    qz, at = str(o.get("quiz", "")), str(o.get("at", ""))
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}|random", qz) and ISO.fullmatch(at) and (qz, at) not in seen:
+        stats["opens"].append({"quiz": qz, "at": at}); seen.add((qz, at))
+stats["opens"].sort(key=lambda o: o["at"])
+spath.write_text(json.dumps(stats, indent=1, ensure_ascii=False) + "\n")
+
 open_n = sum(x["status"] == "open" for x in mistakes)
 short = lambda x: f"- **{x['domain']}**: {x['q'][:110]}{'…' if len(x['q']) > 110 else ''}"
 lines = [f"Recorded **{score}/{total}** for `{course}` {quiz_id}.", ""]
 if new:   lines += [f"**New mistakes ({len(new)})** → homework in upcoming quizzes:"] + [short(x) for x in new] + [""]
 if again: lines += [f"**Missed again ({len(again)})** → stays on the homework list:"] + [short(x) for x in again] + [""]
 if fixed: lines += [f"**Fixed ({len(fixed)})** ✅ removed from homework:"] + [short(x) for x in fixed] + [""]
-lines.append(f"Open homework items: **{open_n}**")
+lines.append(f"Time: **{session['durationSec'] // 60}m {session['durationSec'] % 60}s** ({session['hints']} hints) · Open homework items: **{open_n}**")
 Path("summary.md").write_text("\n".join(lines) + "\n")
 
 with open(os.environ.get("GITHUB_OUTPUT", os.devnull), "a") as out:

@@ -24,13 +24,14 @@ jobs:
         id: rec
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: python3 .github/scripts/record_results.py
 
       - name: Commit
         run: |
           git config user.name "${{ github.repository_owner }}"
           git config user.email "${{ github.repository_owner_id }}+${{ github.repository_owner }}@users.noreply.github.com"
-          git add courses/*/mistakes.json
+          git add courses/*/mistakes.json courses/*/stats.json
           git diff --cached --quiet && exit 0
           git commit -m "results: ${{ steps.rec.outputs.course }} ${{ steps.rec.outputs.quiz }} (${{ steps.rec.outputs.score }})"
           for i in 1 2 3; do git pull --rebase -q && git push && exit 0; sleep 5; done; exit 1
