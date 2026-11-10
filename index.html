@@ -285,12 +285,14 @@ async function showStats(){
   const pct = (a,b) => b ? Math.round(100*a/b) : null;
   const hwOpen = mistakes.filter(m=>m.status==='open').length, hwDone = mistakes.length - hwOpen;
   const acc = pct(ok,qs);
+  const fin = ses.filter(x=>x.status!=='partial'), finOk = fin.reduce((a,x)=>a+x.score,0), finQs = fin.reduce((a,x)=>a+x.total,0), finAcc = pct(finOk,finQs);
 
   app.innerHTML = `
     <div class="meta"><span>${esc(course.id)} statistics</span><button class="btn" id="back">← Back to quiz</button></div>
     ${!ses.length ? `<p class="sub">No sessions recorded yet. Finish a quiz and use “Send results to GitHub”. Charts fill in from there.</p>` : ''}
     <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin:6px 0 4px">
       <div><div class="hero">${acc===null?'—':acc+'%'}</div><div class="sub">overall accuracy · ${ok}/${qs} · pass bar 70%</div></div>
+      <div style="margin-left:24px"><div class="hero" style="font-size:2rem">${finAcc===null?'—':finAcc+'%'}</div><div class="sub">on finished quizzes · ${finOk}/${finQs}</div></div>
     </div>
     <div class="kpis">
       <div class="kpi"><b>${ses.filter(x=>x.status!=='partial').length}</b><small>quizzes completed</small></div>
