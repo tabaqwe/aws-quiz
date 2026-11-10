@@ -39,6 +39,7 @@ select{background:var(--card);border:1px solid var(--line);border-radius:8px;pad
 .rev small{color:var(--muted)}
 .tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
 .err{color:var(--bad)}
+.tag.hw{border-color:var(--accent);color:var(--accent)}
 .pickers{display:flex;gap:8px;flex-wrap:wrap}
 .mixbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;color:var(--muted);font-size:.9rem}
 </style>
@@ -58,6 +59,7 @@ select{background:var(--card);border:1px solid var(--line);border-radius:8px;pad
 const L = 'ABCDE';
 const app = document.getElementById('app'), daySel = document.getElementById('day'), courseSel = document.getElementById('course');
 const RANDOM = 'random';
+const REPO = 'tabaqwe/aws-quiz';
 let courses, course, days, quiz, i, picks, results, hintShown, mixSize = 10;
 
 const store = {
@@ -117,7 +119,7 @@ async function loadMix(){
   app.textContent = 'Loading all days…';
   if (poolCourse !== course.id){
     const all = await Promise.all(days.map(d=>getJSON(`courses/${course.id}/${d}.json`).catch(()=>null)));
-    pool = all.filter(Boolean).flatMap(qz=>qz.questions.map(q=>({...q, from: qz.date})));
+    pool = all.filter(Boolean).flatMap(qz=>qz.questions.map((q,k)=>({...q, from: qz.date, idx: k})));
     poolCourse = course.id;
   }
   const n = Math.min(mixSize, pool.length);
@@ -145,7 +147,7 @@ function render(){
   const q = quiz.questions[i], n = quiz.questions.length, done = results[i];
   const multi = q.answer.length > 1;
   app.innerHTML = `${i===0&&!done?mixBar():''}
-    <div class="meta"><span>Question ${i+1} / ${n}${q.from?` · from ${q.from}`:''}</span><span class="tag">${esc(q.domain||'')}</span></div>
+    <div class="meta"><span>Question ${i+1} / ${n}${q.from?` · from ${q.from}`:''}</span><span>${q.homework?'<span class="tag hw">📝 Homework</span> ':''}<span class="tag">${esc(q.domain||'')}</span></span></div>
     <div class="bar"><i style="width:${(i/n)*100}%"></i></div>
     <p class="q">${esc(q.q)}</p>
     ${multi?`<div class="multi">Choose ${q.answer.length}.</div>`:''}
@@ -194,9 +196,19 @@ function summary(){
       <div class="rev"><div>${r.ok?'✅':'❌'} <strong>${k+1}.</strong> ${esc(q.q)}${q.from?` <small>(${q.from})</small>`:''}</div>
       <small>Your answer: ${r.picks.map(p=>L[p]).join(', ')} · Correct: ${q.answer.map(a=>L[a]+'. '+esc(q.options[a])).join('; ')}${r.hint?' · used hint':''}</small>
       ${r.ok?'':`<div style="margin-top:6px;font-size:.95rem">${esc(q.explanation)}</div>`}</div>`; }).join('')}
-    <div class="row"><button class="btn primary" id="retry">Retry this quiz</button>${quiz.date===RANDOM?'<button class="btn" id="remix2">New random mix</button>':''}</div>`;
+    <div class="row"><button class="btn primary" id="send">Send results to GitHub</button><button class="btn" id="retry">Retry this quiz</button>${quiz.date===RANDOM?'<button class="btn" id="remix2">New random mix</button>':''}</div>`;
+  document.getElementById('send').onclick = sendResults;
   document.getElementById('retry').onclick = () => { i = 0; results = []; start(); };
   const rm = document.getElementById('remix2'); if (rm) rm.onclick = () => loadMix();
+}
+function sendResults(){
+  const n = quiz.questions.length, score = results.filter(r=>r.ok).length;
+  const data = {course: course.id, quiz: quiz.date, score, total: n,
+    results: quiz.questions.map((q,k)=>({id: `${q.from||quiz.date}#${q.idx ?? k}`, ok: results[k].ok, picked: results[k].picks}))};
+  const wrong = quiz.questions.filter((q,k)=>!results[k].ok).length;
+  const title = `Quiz results: ${course.id} ${quiz.date} — ${score}/${n}`;
+  const body = `${score}/${n} correct, ${wrong} mistake${wrong===1?'':'s'}. Click **Create** — a GitHub Action records the mistakes as homework for the next quiz.\n\n\`\`\`json\n${JSON.stringify(data)}\n\`\`\`\n`;
+  window.open(`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`, '_blank');
 }
 init();
 </script>
