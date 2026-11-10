@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-06",
+ "title": "Daily CLF-C02 quiz — 2026-11-06",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company rebuilds a monolithic application as microservices on AWS Lambda and DynamoDB to add features faster and scale better. Which migration strategy is this?",
+   "options": [
+    "Rehost",
+    "Refactor (re-architect)",
+    "Repurchase",
+    "Retain"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "The biggest change, with the biggest payoff.",
+   "explanation": "Refactoring re-architects the application with cloud-native features, which is usually driven by a need for agility or scale. Rehosting would have moved it unchanged."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company replaces its self-hosted customer relationship management (CRM) system with a SaaS CRM product. Which migration strategy is this?",
+   "options": [
+    "Rehost",
+    "Relocate",
+    "Replatform",
+    "Repurchase"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "'Drop and shop.'",
+   "explanation": "Repurchasing means moving to a different product, usually SaaS, instead of migrating the existing software. Replatforming keeps the same application and makes some cloud optimizations."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "In the AWS Cloud Adoption Framework, which perspective focuses on orchestrating cloud initiatives while maximizing benefits and minimizing transformation risks, including program management and cloud financial management?",
+   "options": [
+    "Governance",
+    "Business",
+    "Platform",
+    "Operations"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Risk, benefits and program oversight.",
+   "explanation": "The Governance perspective covers program and project management, benefits and risk management, and cloud financial management. The Business perspective focuses on making cloud investments serve business outcomes."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "After GuardDuty flags a suspicious EC2 instance, an analyst wants to quickly investigate the root cause by visualizing related activity across IP addresses, IAM roles and resources over time. Which service fits?",
+   "options": [
+    "Amazon GuardDuty",
+    "Amazon Inspector",
+    "Amazon Detective",
+    "AWS Artifact"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Investigation, not detection.",
+   "explanation": "Detective automatically builds a graph from log data so analysts can investigate the root cause of security findings. GuardDuty is the service that raised the finding in the first place."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company wants one place to see security findings from GuardDuty, Inspector and Macie, and to automatically check its accounts against security best-practice standards. Which service fits?",
+   "options": [
+    "AWS Trusted Advisor",
+    "AWS Security Hub",
+    "Amazon Detective",
+    "AWS Health Dashboard"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Aggregation plus security posture checks.",
+   "explanation": "Security Hub aggregates findings from AWS security services and partner tools, and runs automated checks against standards such as AWS Foundational Security Best Practices. Trusted Advisor gives broader best-practice checks, but it doesn't aggregate findings."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company must ensure that no one in any account of a specific organizational unit, including account administrators, can launch resources outside EU Regions. What should it use?",
+   "options": [
+    "An IAM policy attached to each user",
+    "A security group rule",
+    "An AWS Config rule",
+    "A service control policy (SCP) in AWS Organizations"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Guardrails that apply to whole accounts.",
+   "explanation": "SCPs set the maximum permissions for accounts in an OU, and they apply even to administrators of those accounts. A Config rule can detect noncompliant resources, but it doesn't prevent them from being created."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "On-premises applications need to keep using NFS and SMB file shares while the data is actually stored in Amazon S3, with a local cache for low-latency access. Which service fits?",
+   "options": [
+    "AWS DataSync",
+    "Amazon EFS",
+    "AWS Storage Gateway",
+    "AWS Direct Connect"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Hybrid storage that on-premises apps use every day.",
+   "explanation": "Storage Gateway gives on-premises applications access to cloud storage through file, volume and tape interfaces, with local caching. DataSync is for transferring data, not for ongoing local access through a file share."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A team wants to run Docker containers without provisioning, patching or scaling any EC2 instances. Which compute option fits?",
+   "options": [
+    "AWS Fargate",
+    "Amazon EC2",
+    "Amazon Lightsail",
+    "AWS Outposts"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Serverless containers.",
+   "explanation": "Fargate is a serverless compute engine for containers on ECS and EKS: AWS runs and scales the underlying servers. On EC2 you'd manage the container instances yourself."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A factory must run AWS services on its own premises because of very low latency needs and data residency rules, using the same APIs and tools as in the AWS Cloud. Which service fits?",
+   "options": [
+    "AWS Local Zones",
+    "AWS Outposts",
+    "AWS Wavelength",
+    "AWS Direct Connect"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "AWS hardware installed at your site.",
+   "explanation": "Outposts brings AWS infrastructure and services into your own data center or facility. Local Zones are AWS-operated locations near large cities, not on your premises."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "A development environment runs on EC2 around the clock but is used only on weekdays from 9:00 to 18:00. Which TWO actions will reduce its cost the most? (Choose two.)",
+   "options": [
+    "Stop the instances outside working hours, for example with a scheduler",
+    "Rightsize oversized instances using AWS Compute Optimizer recommendations",
+    "Buy 3-year Reserved Instances for every instance",
+    "Move the instances to Dedicated Hosts",
+    "Switch the volumes to Provisioned IOPS SSD"
+   ],
+   "answer": [
+    0,
+    1
+   ],
+   "hint": "Pay only for the hours and sizes you actually need.",
+   "explanation": "Stopping instances when no one uses them and rightsizing them both cut waste directly. 3-year RIs assume steady 24/7 usage, so they'd lock in paying for idle hours."
+  }
+ ]
+}

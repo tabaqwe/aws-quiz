@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-02",
+ "title": "Daily CLF-C02 quiz — 2026-11-02",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company must move 50 on-premises servers to AWS before its data center lease ends in 3 months. It wants no code changes and plans to use AWS Application Migration Service. Which migration strategy is this?",
+   "options": [
+    "Refactor",
+    "Replatform",
+    "Rehost",
+    "Repurchase"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Also known as 'lift and shift'.",
+   "explanation": "Rehosting moves applications as they are, which is the fastest way to migrate under a deadline. Replatforming would make small optimizations along the way, such as moving to a managed database."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A retailer's traffic jumps tenfold during flash sales and then falls back. The company wants resources added automatically when demand rises and removed when it drops. Which cloud concept is this?",
+   "options": [
+    "High availability",
+    "Elasticity",
+    "Fault tolerance",
+    "Durability"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Grow and shrink with demand.",
+   "explanation": "Elasticity is the ability to acquire resources as you need them and release them when you don't, so you stop guessing capacity. High availability is about staying up, not about matching capacity to demand."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "An application on EC2 must read objects from an S3 bucket. What is the MOST secure way to give it credentials?",
+   "options": [
+    "Store an IAM user's access keys in a config file on the instance",
+    "Bake access keys into the AMI",
+    "Use the root user's access keys",
+    "Attach an IAM role to the instance through an instance profile"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Avoid long-term credentials on the instance.",
+   "explanation": "An IAM role attached to the instance provides temporary credentials that rotate automatically, so no keys are stored on the instance. Access keys in files or AMIs are long-lived and can leak."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company needs to automatically discover and classify sensitive data such as credit card numbers and personal information stored across hundreds of S3 buckets. Which service should it use?",
+   "options": [
+    "Amazon Macie",
+    "Amazon GuardDuty",
+    "Amazon Inspector",
+    "Amazon Detective"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Sensitive data discovery in S3.",
+   "explanation": "Macie uses machine learning and pattern matching to find and classify sensitive data such as PII in S3. GuardDuty detects threats from account activity; it doesn't classify data."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "An S3 bucket was deleted yesterday. The security team must find out which IAM user deleted it and when. Which service provides this information?",
+   "options": [
+    "Amazon CloudWatch",
+    "AWS CloudTrail",
+    "AWS X-Ray",
+    "AWS Trusted Advisor"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Who made which API call, and when?",
+   "explanation": "CloudTrail records API activity in the account, including who made each call, when, and from where. CloudWatch collects metrics and logs about performance, not an audit trail of API calls."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A gaming company needs a fully managed, serverless key-value database with single-digit-millisecond latency at any scale for player profiles. Which service fits?",
+   "options": [
+    "Amazon RDS",
+    "Amazon Redshift",
+    "Amazon DynamoDB",
+    "Amazon DocumentDB"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "NoSQL, key-value, serverless.",
+   "explanation": "DynamoDB is a serverless NoSQL key-value and document database with consistent single-digit-millisecond performance at any scale. RDS is relational and runs on database instances that you size and manage."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company wants its web application to keep running even if an entire data center fails. What should it do?",
+   "options": [
+    "Deploy the application across multiple Availability Zones",
+    "Deploy it to multiple edge locations",
+    "Use a single larger instance in one Availability Zone",
+    "Deploy it to a Local Zone"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Each AZ is isolated from failures in the others.",
+   "explanation": "AZs are physically separate groups of data centers within a Region, so spreading instances across them protects against a data center failure. Edge locations are used for caching (CloudFront), not for running your application servers."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "An order website sometimes receives orders faster than the backend can process them. The company wants to buffer orders so that none are lost and the two tiers are decoupled. Which service should it use?",
+   "options": [
+    "Amazon SNS",
+    "Amazon SQS",
+    "Amazon Kinesis Video Streams",
+    "AWS Batch"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Messages wait until a consumer pulls them.",
+   "explanation": "SQS is a message queue: producers add messages and consumers process them at their own pace, which decouples the tiers. SNS pushes each message to subscribers immediately and doesn't hold a backlog."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Which TWO AWS services let you run compute workloads without provisioning or managing servers? (Choose two.)",
+   "options": [
+    "AWS Lambda",
+    "AWS Fargate",
+    "Amazon EC2",
+    "Amazon Lightsail",
+    "AWS Outposts"
+   ],
+   "answer": [
+    0,
+    1
+   ],
+   "hint": "Serverless: functions and containers.",
+   "explanation": "Lambda runs functions and Fargate runs containers, and in both cases AWS manages the underlying servers. EC2 and Lightsail give you instances to manage, and Outposts is AWS hardware installed in your own facility."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "Finance wants an email alert whenever the forecasted monthly spend for a project is going to exceed $500. Which tool should it use?",
+   "options": [
+    "AWS Cost Explorer",
+    "AWS Pricing Calculator",
+    "AWS Budgets",
+    "AWS Cost and Usage Report"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Thresholds and alerts, including on forecasts.",
+   "explanation": "AWS Budgets lets you set custom cost or usage budgets and sends alerts when actual or forecasted amounts cross a threshold. Cost Explorer is for visualizing and analyzing spend, not for alerting on thresholds."
+  }
+ ]
+}

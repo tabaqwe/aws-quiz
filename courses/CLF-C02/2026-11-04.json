@@ -1,0 +1,156 @@
+{
+ "date": "2026-11-04",
+ "title": "Daily CLF-C02 quiz — 2026-11-04",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company moves its self-managed MySQL database from an on-premises server to Amazon RDS for MySQL, changing almost no application code, to stop managing backups and patching. Which migration strategy is this?",
+   "options": [
+    "Replatform",
+    "Rehost",
+    "Refactor",
+    "Retire"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "'Lift, tinker, and shift.'",
+   "explanation": "Replatforming makes a few cloud optimizations, such as moving to a managed database, without changing the core architecture. Rehosting would have moved the database server as-is onto EC2."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "AWS can offer lower pay-as-you-go prices because the usage of hundreds of thousands of customers is aggregated in the cloud. Which benefit of cloud computing does this describe?",
+   "options": [
+    "Increase speed and agility",
+    "Elasticity",
+    "Benefit from massive economies of scale",
+    "Go global in minutes"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Scale on AWS's side lowers the price for everyone.",
+   "explanation": "Economies of scale: aggregated demand lets AWS operate more efficiently and pass on lower prices. Elasticity is about matching your own capacity to demand, not about price levels."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company wants to reduce the environmental impact of its workloads. It maximizes utilization, adopts managed services, and chooses energy-efficient instance types such as AWS Graviton. Which Well-Architected pillar is this?",
+   "options": [
+    "Cost Optimization",
+    "Operational Excellence",
+    "Performance Efficiency",
+    "Sustainability"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Environmental impact is the key phrase.",
+   "explanation": "The Sustainability pillar focuses on minimizing the environmental impact of running cloud workloads, for example through high utilization and efficient hardware. Cost Optimization often benefits too, but its goal is spend."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company wants to create and control the encryption keys that protect data in S3 and EBS, with key usage audited through CloudTrail. Which service should it use?",
+   "options": [
+    "AWS Secrets Manager",
+    "AWS Key Management Service (AWS KMS)",
+    "AWS Certificate Manager",
+    "Amazon Macie"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "A managed service for encryption keys.",
+   "explanation": "KMS creates and manages encryption keys, integrates with S3, EBS and many other services, and logs key usage to CloudTrail. Secrets Manager stores secrets such as passwords, not the encryption keys that services use."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "An application's database password must be stored securely and rotated automatically every 30 days without code changes. Which service is designed for this?",
+   "options": [
+    "AWS KMS",
+    "Amazon Cognito",
+    "AWS Secrets Manager",
+    "IAM access keys"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Built-in automatic rotation of credentials.",
+   "explanation": "Secrets Manager stores secrets, retrieves them through an API, and can rotate database credentials automatically. KMS manages encryption keys, not application passwords."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company wants automated, continuous scanning of its EC2 instances and container images for known software vulnerabilities (CVEs) and unintended network exposure. Which service fits?",
+   "options": [
+    "Amazon Inspector",
+    "Amazon GuardDuty",
+    "Amazon Macie",
+    "AWS Trusted Advisor"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Vulnerability management.",
+   "explanation": "Amazon Inspector continuously scans EC2, container images in ECR, and Lambda functions for software vulnerabilities and network exposure. GuardDuty detects threats from activity logs; it doesn't scan software for CVEs."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Dozens of Linux EC2 instances across multiple Availability Zones need to read and write the same files at the same time over NFS. Which storage service fits?",
+   "options": [
+    "Amazon EBS",
+    "Amazon FSx for Windows File Server",
+    "Amazon EFS",
+    "Instance store"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "A shared file system for Linux.",
+   "explanation": "Amazon EFS is a serverless, elastic NFS file system that many Linux instances across AZs can mount at the same time. FSx for Windows File Server uses SMB for Windows workloads, and an EBS volume is normally attached to a single instance."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company needs a dedicated, private network connection from its data center to AWS with consistent bandwidth that doesn't travel over the public internet. Which service should it use?",
+   "options": [
+    "AWS Site-to-Site VPN",
+    "AWS Direct Connect",
+    "Amazon CloudFront",
+    "AWS Client VPN"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "A physical, dedicated link.",
+   "explanation": "Direct Connect provides a dedicated private connection to AWS with more consistent performance. A Site-to-Site VPN is quicker to set up and encrypted, but it runs over the public internet."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Analysts want to run standard SQL queries directly on CSV and Parquet files in S3 without loading the data anywhere or managing infrastructure, paying per query. Which service fits?",
+   "options": [
+    "Amazon Redshift",
+    "Amazon EMR",
+    "AWS Glue",
+    "Amazon Athena"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Serverless SQL over data in S3.",
+   "explanation": "Athena is serverless: you query data in S3 with SQL and pay for the data scanned. Glue is for ETL and data cataloging; it doesn't answer ad-hoc SQL queries."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "A database server will run 24/7 on the same instance type in one Region for the next three years. Which purchasing option gives the biggest discount?",
+   "options": [
+    "On-Demand Instances",
+    "Spot Instances",
+    "Reserved Instances with a 3-year term",
+    "Dedicated Hosts"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Steady, predictable, long-term usage.",
+   "explanation": "Reserved Instances (or Savings Plans) with a 3-year commitment give the largest discounts for steady workloads, up to about 72% off On-Demand. Spot can be cheaper, but it can be interrupted, which a database can't tolerate."
+  }
+ ]
+}

@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-07",
+ "title": "Daily CLF-C02 quiz — 2026-11-07",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company must migrate an on-premises Oracle database to Amazon Aurora PostgreSQL with minimal downtime, which includes converting the schema. Which combination should it use?",
+   "options": [
+    "AWS DataSync",
+    "AWS Application Migration Service",
+    "AWS Database Migration Service (DMS) with schema conversion",
+    "AWS Backup"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Different source and target database engines.",
+   "explanation": "DMS migrates data with minimal downtime through ongoing replication, and its schema conversion (DMS Schema Conversion or the AWS SCT) handles the move between engines. Application Migration Service rehosts whole servers; it doesn't convert databases."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A team uses serverless architectures, deploys to multiple Regions to be closer to users, and regularly benchmarks newer instance types to pick the best fit. Which Well-Architected pillar is it applying?",
+   "options": [
+    "Reliability",
+    "Performance Efficiency",
+    "Cost Optimization",
+    "Sustainability"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Using computing resources efficiently as demand and technology change.",
+   "explanation": "Performance Efficiency is about choosing and evolving the right resources, for example by going global in minutes, using serverless, and experimenting more often. Reliability is about withstanding failures."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company needs free public SSL/TLS certificates for its Application Load Balancer and CloudFront distribution, renewed automatically. Which service fits?",
+   "options": [
+    "AWS KMS",
+    "AWS Certificate Manager (ACM)",
+    "AWS Secrets Manager",
+    "AWS CloudHSM"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Certificates, not keys.",
+   "explanation": "ACM provisions public TLS certificates at no extra cost for use with integrated services such as ELB and CloudFront, and it renews them automatically. KMS manages encryption keys, not certificates."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Which service inspects an AWS environment and recommends improvements across cost optimization, performance, security, fault tolerance and service quotas, such as flagging root accounts without MFA or security groups with open ports?",
+   "options": [
+    "AWS Trusted Advisor",
+    "Amazon Inspector",
+    "Amazon GuardDuty",
+    "AWS Artifact"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Best-practice checks across five categories.",
+   "explanation": "Trusted Advisor runs best-practice checks and gives recommendations. The full set of checks comes with Business Support or higher. Inspector scans workloads for software vulnerabilities, not account-wide best practices."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Regulations require that a company's encryption keys be stored in dedicated, single-tenant hardware security modules that only the company controls. Which service meets this?",
+   "options": [
+    "AWS KMS with AWS managed keys",
+    "AWS Certificate Manager",
+    "Amazon Macie",
+    "AWS CloudHSM"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Dedicated hardware under the customer's exclusive control.",
+   "explanation": "CloudHSM provides single-tenant, FIPS-validated HSMs in your VPC, and you exclusively manage the keys. KMS uses HSMs that AWS operates on shared infrastructure."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Which TWO factors should guide a company's choice of AWS Region for a new workload? (Choose two.)",
+   "options": [
+    "The Region where the AWS account was first created",
+    "Data residency and compliance requirements",
+    "Whether IAM is available in that Region",
+    "Proximity to end users, which affects latency",
+    "The account owner's local time zone"
+   ],
+   "answer": [
+    1,
+    3
+   ],
+   "hint": "Think compliance, latency, service availability and price.",
+   "explanation": "Region choice depends on compliance and data residency, latency to users, which services are available, and pricing. IAM is a global service, and an account isn't tied to the Region where it was created."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A multiplayer game uses UDP. It needs two static IP addresses for clients, routing over the AWS global network to the nearest healthy Regional endpoint, and fast failover between Regions. Which service fits?",
+   "options": [
+    "Amazon CloudFront",
+    "Amazon Route 53",
+    "AWS Global Accelerator",
+    "AWS Direct Connect"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Static anycast IPs that handle TCP and UDP.",
+   "explanation": "Global Accelerator provides static anycast IPs and routes TCP and UDP traffic over the AWS backbone to optimal endpoints, with fast failover. CloudFront caches HTTP(S) content and isn't designed for UDP game traffic."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "When an order ships, the company wants to send an email, send an SMS, and notify three internal microservices at the same time. Which service fits this publish/subscribe fan-out?",
+   "options": [
+    "Amazon SQS",
+    "Amazon SNS",
+    "Amazon Kinesis Data Streams",
+    "AWS Batch"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "One message, many subscribers, pushed out.",
+   "explanation": "SNS is a pub/sub service: a message published to a topic is pushed to all subscribers, including email, SMS, Lambda and SQS. SQS is a queue that consumers poll; on its own it doesn't fan out."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "Before deploying a new three-tier architecture, a team wants to estimate its monthly cost so it can include the figure in a business case. Which tool should it use?",
+   "options": [
+    "AWS Cost Explorer",
+    "AWS Pricing Calculator",
+    "AWS Budgets",
+    "AWS Cost and Usage Report"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "There's no usage yet, so this is an estimate.",
+   "explanation": "The Pricing Calculator estimates the cost of AWS services before you use them. Cost Explorer analyzes past spend and forecasts based on usage you already have."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "What is the lowest-cost AWS Support plan that provides 24/7 phone, chat and email access to Cloud Support Engineers and a response time under 1 hour when a production system is down?",
+   "options": [
+    "Basic",
+    "Developer",
+    "Business",
+    "Enterprise"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Developer is business-hours email only.",
+   "explanation": "Business Support adds 24/7 phone, chat and email access, a response time under 1 hour for production system down, and the full set of Trusted Advisor checks. Enterprise has faster response times and a TAM, but it costs more."
+  }
+ ]
+}

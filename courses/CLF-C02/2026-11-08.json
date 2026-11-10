@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-08",
+ "title": "Daily CLF-C02 quiz — 2026-11-08",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "Which AWS CAF perspective focuses on building an enterprise-grade, scalable hybrid cloud platform, including platform architecture, provisioning and orchestration, and modern application development?",
+   "options": [
+    "Operations",
+    "Business",
+    "Platform",
+    "People"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Building the environment, not running it.",
+   "explanation": "The Platform perspective covers architecture, platform engineering, and modernizing and migrating workloads. The Operations perspective covers running workloads, including observability and incident management."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "An IT team stops racking, stacking and powering servers and spends that time on customer-facing features instead. Which benefit of the cloud does this describe?",
+   "options": [
+    "Go global in minutes",
+    "Benefit from massive economies of scale",
+    "Increase speed and agility",
+    "Stop spending money running and maintaining data centers"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Undifferentiated heavy lifting.",
+   "explanation": "Moving to AWS removes the undifferentiated heavy lifting of running data centers, so teams can focus on customers. Speed and agility is about how quickly you can provision and experiment."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "An intern needs to read objects in one specific S3 bucket and nothing else. Following the principle of least privilege, what should be granted?",
+   "options": [
+    "The AmazonS3FullAccess managed policy",
+    "An existing developer's credentials",
+    "A policy allowing only s3:ListBucket and s3:GetObject on that bucket",
+    "AdministratorAccess with MFA required"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Only the actions and resources needed.",
+   "explanation": "Least privilege means granting only the actions needed, here listing and reading, on only the resource needed. MFA strengthens authentication, but it doesn't narrow what an identity can do once signed in."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A security team wants to identify S3 buckets, KMS keys and IAM roles in its account that are shared with or accessible by external principals. Which service fits?",
+   "options": [
+    "Amazon GuardDuty",
+    "IAM Access Analyzer",
+    "Amazon Inspector",
+    "AWS Artifact"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Analyzing resource policies for external access.",
+   "explanation": "IAM Access Analyzer uses automated reasoning on resource policies to find resources shared outside your account or organization. GuardDuty looks for threatening activity, not for policies that grant external access."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "New objects uploaded to Amazon S3 are encrypted at rest by default even if the uploader doesn't request encryption. Which encryption is applied by default?",
+   "options": [
+    "SSE-C (customer-provided keys)",
+    "Client-side encryption",
+    "SSE-KMS with a customer managed key",
+    "SSE-S3 (Amazon S3 managed keys)"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "The default needs no key configuration from you.",
+   "explanation": "Since January 2023, S3 applies server-side encryption with S3 managed keys (SSE-S3) to all new objects by default. You can choose SSE-KMS instead if you need control over the keys and their usage."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A data science team wants a fully managed service to build, train and deploy its own custom machine learning models. Which service fits?",
+   "options": [
+    "Amazon Comprehend",
+    "Amazon SageMaker AI",
+    "Amazon Lex",
+    "Amazon Rekognition"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Custom models, end to end.",
+   "explanation": "SageMaker AI provides managed tools to build, train, tune and deploy custom ML models. Comprehend, Lex and Rekognition are pre-trained AI services for specific tasks."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A website must ingest clickstream events from millions of users in real time and make them available to processing applications within seconds. Which service fits?",
+   "options": [
+    "Amazon Athena",
+    "Amazon Redshift",
+    "Amazon Kinesis Data Streams",
+    "AWS Glue"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Real-time data streaming.",
+   "explanation": "Kinesis Data Streams captures and stores real-time streaming data for consumers to process within seconds. Athena and Redshift query data after it has been stored; they don't ingest streams."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "EC2 instances in a private subnet must reach Amazon S3 without traversing the public internet and without a NAT device. What should the company add?",
+   "options": [
+    "A gateway VPC endpoint for S3",
+    "An internet gateway",
+    "A NAT gateway",
+    "An AWS Site-to-Site VPN"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Private connectivity from the VPC to an AWS service.",
+   "explanation": "A gateway VPC endpoint (available for S3 and DynamoDB) routes traffic to the service privately over the AWS network, at no extra charge. A NAT gateway would send the traffic out through the internet path."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Which TWO statements describe an AWS Availability Zone? (Choose two.)",
+   "options": [
+    "It consists of one or more discrete data centers with redundant power, networking and connectivity",
+    "It is physically separated from other AZs in the same Region but linked to them with low-latency networking",
+    "It is a group of AWS Regions",
+    "It is located inside the customer's own data center",
+    "It is a CloudFront location used to cache content"
+   ],
+   "answer": [
+    0,
+    1
+   ],
+   "hint": "Inside a Region, isolated but well connected.",
+   "explanation": "An AZ is one or more data centers, physically separated from the other AZs in its Region and connected to them with high-bandwidth, low-latency links. CloudFront caches content at edge locations, which are a different part of the infrastructure."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "A company wants to commit to a consistent dollar amount of compute usage per hour for 3 years and get discounts that apply automatically across EC2 instance families, Regions, AWS Fargate and AWS Lambda. Which option fits?",
+   "options": [
+    "Standard Reserved Instances",
+    "Compute Savings Plans",
+    "EC2 Instance Savings Plans",
+    "Spot Instances"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Maximum flexibility for a $/hour commitment.",
+   "explanation": "Compute Savings Plans apply to EC2 in any family, size or Region, and to Fargate and Lambda. EC2 Instance Savings Plans give a deeper discount, but they're tied to one instance family in one Region."
+  }
+ ]
+}

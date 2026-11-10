@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-09",
+ "title": "Daily CLF-C02 quiz — 2026-11-09",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company wants to move 200 on-premises virtual machines to AWS as they are, using continuous block-level replication to keep cutover downtime minimal. Which service should it use?",
+   "options": [
+    "AWS DataSync",
+    "AWS Application Migration Service",
+    "AWS Database Migration Service",
+    "AWS Backup"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "A rehost tool that works on whole servers.",
+   "explanation": "Application Migration Service (MGN) replicates source servers continuously and launches them on AWS with minimal cutover downtime. DataSync transfers files and objects, not whole running servers."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A mainframe-dependent application was recently upgraded on-premises, and the business decides not to migrate it for at least two years. Which migration strategy is this?",
+   "options": [
+    "Rehost",
+    "Retire",
+    "Replatform",
+    "Retain"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Keep it where it is, for now.",
+   "explanation": "Retain (revisit) means keeping an application in its current environment until migrating makes sense. Retire would mean decommissioning it, but this application is still needed."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "Which AWS CAF perspective helps ensure that cloud investments accelerate the company's digital transformation goals and business outcomes?",
+   "options": [
+    "Business",
+    "Governance",
+    "People",
+    "Security"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Strategy, products and business value.",
+   "explanation": "The Business perspective connects cloud adoption to business strategy and outcomes, through capabilities such as strategy management, product management and data monetization. Governance handles oversight and risk."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company must continuously collect evidence of how its AWS resources comply with frameworks such as PCI DSS and GDPR in order to prepare for audits. Which service should it use?",
+   "options": [
+    "AWS Artifact",
+    "AWS Audit Manager",
+    "AWS CloudTrail",
+    "Amazon Macie"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Evidence about your own environment, collected automatically.",
+   "explanation": "Audit Manager continuously collects evidence from your AWS usage and maps it to compliance framework controls. Artifact only provides AWS's own compliance reports."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Which TWO are recommended best practices for the AWS account root user? (Choose two.)",
+   "options": [
+    "Use it for everyday administrative tasks",
+    "Share its credentials with team leads for emergencies",
+    "Enable multi-factor authentication (MFA)",
+    "Rotate its password daily and email it to the team",
+    "Do not create access keys for it"
+   ],
+   "answer": [
+    2,
+    4
+   ],
+   "hint": "Protect it strongly and use it as little as possible.",
+   "explanation": "Protect the root user with MFA, avoid creating root access keys, and use IAM or Identity Center identities for daily work. Sharing root credentials, in any form, breaks accountability."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Administrators need interactive shell access to EC2 instances without opening inbound SSH port 22 or maintaining bastion hosts, and every session must be logged. Which service fits?",
+   "options": [
+    "A bastion host with port 22 open to 0.0.0.0/0",
+    "AWS Systems Manager Session Manager",
+    "AWS Direct Connect",
+    "Amazon Inspector"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Managed, auditable shell access.",
+   "explanation": "Session Manager provides browser or CLI shell access through the SSM Agent, with no inbound ports or bastions needed, and sessions can be logged to S3 or CloudWatch. A bastion with SSH open to the world is exactly what you want to avoid."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company needs a MySQL-compatible relational database that keeps six copies of the data across three Availability Zones and grows storage automatically. Which service fits?",
+   "options": [
+    "Amazon RDS for Oracle",
+    "Amazon DynamoDB",
+    "Amazon Aurora",
+    "Amazon Redshift"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "AWS's cloud-native relational engine.",
+   "explanation": "Aurora is MySQL- and PostgreSQL-compatible, replicates six copies of data across three AZs, and scales storage automatically. DynamoDB is NoSQL, not relational."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "The operations team wants to be notified whenever average CPU utilization on a production instance stays above 80% for 5 minutes. What should it configure?",
+   "options": [
+    "An Amazon CloudWatch alarm that publishes to an SNS topic",
+    "An AWS CloudTrail trail",
+    "An AWS Config rule",
+    "AWS X-Ray tracing"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Metrics, a threshold, and a notification.",
+   "explanation": "CloudWatch alarms watch a metric against a threshold over a period and can notify through SNS. CloudTrail logs API calls; it doesn't monitor performance metrics."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company wants to centrally define backup policies and automate backups of its EBS volumes, RDS databases, DynamoDB tables and EFS file systems. Which service fits?",
+   "options": [
+    "AWS DataSync",
+    "AWS Storage Gateway",
+    "Amazon S3 Glacier Deep Archive",
+    "AWS Backup"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "One policy-based service for many resource types.",
+   "explanation": "AWS Backup centralizes and automates backups across AWS services through backup plans. Glacier Deep Archive is a storage class, not a tool for scheduling and managing backups."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "Which type of data transfer is generally free of charge on AWS?",
+   "options": [
+    "Data transferred out to the internet",
+    "Data transferred between AWS Regions",
+    "Data transferred in to AWS from the internet",
+    "Data transferred out through a NAT gateway"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Getting data into AWS.",
+   "explanation": "Inbound data transfer from the internet is generally free. Data transferred out to the internet and between Regions is charged per GB, and a NAT gateway charges for the data it processes."
+  }
+ ]
+}

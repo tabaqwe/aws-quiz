@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-03",
+ "title": "Daily CLF-C02 quiz — 2026-11-03",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company adds tags to attribute spend to teams, adopts cloud financial management practices, and regularly removes idle resources. Which Well-Architected pillar is it applying?",
+   "options": [
+    "Sustainability",
+    "Cost Optimization",
+    "Performance Efficiency",
+    "Reliability"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "The goal is to deliver business value at the lowest price.",
+   "explanation": "Cost Optimization includes practicing cloud financial management, attributing spend, and eliminating waste such as idle resources. Sustainability also reduces waste, but its goal is environmental impact rather than cost."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "During its cloud adoption, a company runs training programs, updates job roles, and manages organizational change so staff can work effectively in the cloud. Which AWS CAF perspective covers this?",
+   "options": [
+    "Business",
+    "Governance",
+    "People",
+    "Platform"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Culture, skills and organizational structure.",
+   "explanation": "The People perspective covers culture, organizational structure, leadership, and workforce transformation, including training. Governance is about orchestrating initiatives and managing risk."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company that is frequently targeted wants advanced DDoS protection, 24/7 access to the AWS Shield Response Team, and protection against scaling charges caused by DDoS attacks. Which service should it use?",
+   "options": [
+    "AWS Shield Advanced",
+    "AWS Shield Standard",
+    "AWS WAF",
+    "Amazon GuardDuty"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Standard is free and automatic. What's the paid tier?",
+   "explanation": "Shield Advanced adds enhanced detection, the 24/7 Shield Response Team, and DDoS cost protection. Shield Standard is free and automatically protects every customer against common network and transport layer attacks, but has none of these extras."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Which firewall feature operates at the instance level, supports only allow rules, and automatically allows return traffic for permitted requests?",
+   "options": [
+    "Network ACL",
+    "Security group",
+    "AWS WAF",
+    "Route table"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Stateful versus stateless.",
+   "explanation": "Security groups are stateful, instance-level firewalls with allow rules only. Network ACLs work at the subnet level, are stateless (return traffic needs its own rule), and support both allow and deny rules."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "An external auditor asks for AWS's own SOC 2 report and PCI DSS attestation as part of a compliance review. Where can the company download these documents?",
+   "options": [
+    "AWS Audit Manager",
+    "AWS Security Hub",
+    "AWS Config",
+    "AWS Artifact"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "On-demand access to AWS's compliance reports.",
+   "explanation": "AWS Artifact is a self-service portal for AWS compliance reports and agreements, such as SOC reports, PCI attestations and the BAA. Audit Manager collects evidence about your own use of AWS, not AWS's reports."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A database on a single EC2 instance needs block storage that keeps its data when the instance is stopped and started. Which storage should it use?",
+   "options": [
+    "Instance store",
+    "Amazon EBS",
+    "Amazon EFS",
+    "Amazon S3 Glacier"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Persistent block storage attached to one instance.",
+   "explanation": "EBS volumes are persistent block storage that exist independently of the instance's life. Instance store is temporary block storage, and its data is lost when the instance stops."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company runs its website in a primary Region and a standby Region. DNS should automatically send users to the standby only when the primary becomes unhealthy. Which Route 53 configuration does this?",
+   "options": [
+    "Simple routing",
+    "Weighted routing",
+    "Geolocation routing",
+    "Failover routing with health checks"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Active-passive DNS.",
+   "explanation": "Failover routing uses health checks to send traffic to the primary resource and switch to the secondary when the primary fails. Weighted routing splits traffic by percentages instead of reacting to health."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Analysts need to run complex SQL queries over petabytes of historical sales data for business intelligence dashboards. Which service fits best?",
+   "options": [
+    "Amazon Aurora",
+    "Amazon DynamoDB",
+    "Amazon Redshift",
+    "Amazon ElastiCache"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "A data warehouse for analytics (OLAP).",
+   "explanation": "Redshift is a petabyte-scale data warehouse built for analytical SQL queries. Aurora is a relational database built for transactional (OLTP) workloads, not large-scale analytics."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A team wants to define its VPCs, EC2 instances and databases in templates so it can create identical environments repeatedly and keep the definitions in version control. Which service should it use?",
+   "options": [
+    "AWS CloudFormation",
+    "AWS Elastic Beanstalk",
+    "AWS Systems Manager",
+    "AWS Config"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Infrastructure as code.",
+   "explanation": "CloudFormation provisions resources from JSON or YAML templates as stacks, which gives you repeatable infrastructure as code. Elastic Beanstalk deploys applications for you, but it isn't a general-purpose template engine."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "Which TWO are benefits of consolidated billing in AWS Organizations? (Choose two.)",
+   "options": [
+    "Usage across accounts is combined to qualify for volume pricing discounts",
+    "One bill for all accounts in the organization",
+    "Free Business Support for every member account",
+    "Automatic purchase of Reserved Instances",
+    "Free data transfer between all accounts"
+   ],
+   "answer": [
+    0,
+    1
+   ],
+   "hint": "What does combining accounts change about billing?",
+   "explanation": "Consolidated billing gives you one bill and combines usage across accounts, which can reach volume discount tiers sooner and share RI and Savings Plans discounts. It doesn't include support plans or make data transfer free."
+  }
+ ]
+}

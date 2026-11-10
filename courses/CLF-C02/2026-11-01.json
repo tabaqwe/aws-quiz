@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-01",
+ "title": "Daily CLF-C02 quiz — 2026-11-01",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "A company redesigns its order system so that failed components are automatically replaced, it scales out to meet demand, and it regularly tests its recovery procedures. Which Well-Architected pillar do these practices map to?",
+   "options": [
+    "Performance Efficiency",
+    "Reliability",
+    "Operational Excellence",
+    "Sustainability"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Think about a workload that keeps doing its job when something breaks.",
+   "explanation": "Reliability covers automatic recovery from failure, testing recovery procedures, and scaling to meet demand. Performance Efficiency is about using resources efficiently, not about surviving failures."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A startup does not want to buy servers up front. It wants to pay only for the compute it actually uses each month. Which benefit of the AWS Cloud is this?",
+   "options": [
+    "Trade fixed (capital) expense for variable expense",
+    "Stop spending money running and maintaining data centers",
+    "Go global in minutes",
+    "Benefit from massive economies of scale"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Up-front purchase versus paying as you go.",
+   "explanation": "Trading capital expense for variable expense means you pay only for what you consume instead of investing in hardware up front. Economies of scale explain why AWS prices are low, not how you pay."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A company runs its application on Amazon EC2 instances. Under the shared responsibility model, who is responsible for applying security patches to the guest operating system?",
+   "options": [
+    "AWS",
+    "The customer",
+    "AWS and the customer equally",
+    "AWS Support"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "EC2 is infrastructure as a service: who controls the OS?",
+   "explanation": "With EC2 the customer manages the guest OS, including patching, plus applications and security group rules. AWS secures the hardware, the hypervisor and the physical facilities."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Which TWO tasks can ONLY be performed by the AWS account root user? (Choose two.)",
+   "options": [
+    "Close the AWS account",
+    "Create an IAM role",
+    "Change the account name, root email address, or root password",
+    "Create a VPC",
+    "Turn on AWS CloudTrail"
+   ],
+   "answer": [
+    0,
+    2
+   ],
+   "hint": "Think about tasks that affect the account itself, not resources inside it.",
+   "explanation": "Closing the account and changing account settings such as the root email address and password require the root user. IAM roles, VPCs and CloudTrail can all be managed by IAM identities with the right permissions."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A security team wants a managed service that continuously analyzes VPC Flow Logs, DNS logs and CloudTrail events to detect threats such as cryptocurrency mining or calls from known malicious IP addresses. Which service fits?",
+   "options": [
+    "Amazon Inspector",
+    "AWS Shield Standard",
+    "Amazon Macie",
+    "Amazon GuardDuty"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Intelligent threat detection from logs, with no agents to install.",
+   "explanation": "GuardDuty uses threat intelligence and machine learning on flow, DNS and CloudTrail logs to detect suspicious activity. Inspector scans workloads for software vulnerabilities; it doesn't analyze account activity."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "An e-commerce site behind an Application Load Balancer is being probed with SQL injection and cross-site scripting attempts. What should the company use to filter these requests?",
+   "options": [
+    "AWS WAF",
+    "Security groups",
+    "AWS Shield Standard",
+    "Network ACLs"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "You need to look inside HTTP requests (layer 7).",
+   "explanation": "AWS WAF inspects web requests and blocks common exploits such as SQL injection and XSS with managed or custom rules. Security groups and network ACLs filter only by IP, port and protocol, so they can't see the request content."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company must keep scanned legal documents for 10 years. They're almost never accessed, and a retrieval time of up to 48 hours is acceptable. Which storage class is the lowest-cost option?",
+   "options": [
+    "S3 Standard-Infrequent Access",
+    "S3 Glacier Instant Retrieval",
+    "S3 Glacier Deep Archive",
+    "S3 One Zone-Infrequent Access"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Long retention, rare access and slow retrieval is fine.",
+   "explanation": "S3 Glacier Deep Archive is the lowest-cost storage class, built for long-term retention with retrieval in hours. Glacier Instant Retrieval costs more because it gives millisecond access, which isn't needed here."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Each time an image is uploaded to an S3 bucket, a thumbnail must be generated. The team doesn't want to manage servers and wants to pay only while code runs. Which service should run the code?",
+   "options": [
+    "Amazon EC2 with Auto Scaling",
+    "AWS Lambda",
+    "Amazon Lightsail",
+    "AWS Elastic Beanstalk"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Event-driven code with no servers to manage.",
+   "explanation": "Lambda runs code in response to events such as S3 uploads, scales automatically, and bills by duration in milliseconds. EC2, Lightsail and Elastic Beanstalk all run servers that you pay for while they're up."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A media company serves images and videos to viewers around the world. It wants to cache this content close to viewers to reduce latency and load on its origin. Which service fits?",
+   "options": [
+    "Amazon Route 53",
+    "AWS Global Accelerator",
+    "Amazon CloudFront",
+    "AWS Direct Connect"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "The key word is caching at edge locations.",
+   "explanation": "CloudFront is a CDN that caches content at edge locations close to viewers. Global Accelerator improves routing over the AWS network with static IPs, but it doesn't cache content."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "A research team runs large batch simulations. The jobs are fault-tolerant and can be stopped and restarted at any time. Which EC2 purchasing option is the cheapest?",
+   "options": [
+    "On-Demand Instances",
+    "Reserved Instances",
+    "Dedicated Instances",
+    "Spot Instances"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Interruptible workloads get the deepest discount.",
+   "explanation": "Spot Instances use spare EC2 capacity at up to 90% off On-Demand prices, but AWS can reclaim them. That's fine for fault-tolerant batch jobs. Reserved Instances need a 1- or 3-year commitment for steady usage."
+  }
+ ]
+}

@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-05",
+ "title": "Daily CLF-C02 quiz — 2026-11-05",
+ "questions": [
+  {
+   "domain": "Cloud Concepts",
+   "q": "Developers can now spin up a test environment in minutes instead of waiting weeks for hardware, so they experiment more often at low cost. Which benefit of the cloud is this?",
+   "options": [
+    "Benefit from massive economies of scale",
+    "Increase speed and agility",
+    "Go global in minutes",
+    "Stop guessing capacity"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Time to try something new.",
+   "explanation": "Speed and agility: resources are a click away, so the cost and time of experimenting drop sharply. Stop guessing capacity is about scaling to match demand, not about how fast you can experiment."
+  },
+  {
+   "domain": "Cloud Concepts",
+   "q": "A team performs operations as code, makes frequent, small, reversible changes, and runs post-incident reviews to learn from failures. Which Well-Architected pillar is it following?",
+   "options": [
+    "Operational Excellence",
+    "Reliability",
+    "Security",
+    "Performance Efficiency"
+   ],
+   "answer": [
+    0
+   ],
+   "hint": "Running and improving operations.",
+   "explanation": "Operational Excellence covers running and monitoring systems and continually improving processes, including operations as code and small reversible changes. Reliability is about recovering from failures and meeting demand."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Employees should sign in once with their corporate identity provider and then access several AWS accounts and business applications. Which service should the company use?",
+   "options": [
+    "Amazon Cognito",
+    "IAM users in each account",
+    "AWS IAM Identity Center",
+    "AWS Directory Service"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Workforce single sign-on across accounts.",
+   "explanation": "IAM Identity Center provides workforce single sign-on to multiple AWS accounts and applications, and it can connect to an external identity provider. Cognito handles sign-in for your application's customers, not your workforce."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "A mobile app needs sign-up and sign-in for millions of customers, including sign-in with Google and Facebook accounts. Which service fits?",
+   "options": [
+    "AWS IAM Identity Center",
+    "IAM",
+    "AWS STS",
+    "Amazon Cognito"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Customer identity for web and mobile apps.",
+   "explanation": "Cognito provides user pools for sign-up and sign-in, including social identity providers, and scales to millions of users. IAM is for identities that manage AWS resources, not end users of an app."
+  },
+  {
+   "domain": "Security & Compliance",
+   "q": "Which TWO are AWS's responsibilities when a customer uses Amazon RDS? (Choose two.)",
+   "options": [
+    "Patching the database engine and the underlying operating system",
+    "Physical security of the data centers",
+    "Creating database users and managing their permissions",
+    "Configuring security group rules for the DB instance",
+    "Deciding which data to encrypt"
+   ],
+   "answer": [
+    0,
+    1
+   ],
+   "hint": "RDS is a managed service. What does 'managed' take off your hands?",
+   "explanation": "For RDS, AWS handles the physical facilities and patches the OS and database engine. The customer still manages database users, network access through security groups, and data protection choices such as encryption."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "Developers want to upload their application code and have AWS automatically handle capacity provisioning, load balancing, auto scaling and health monitoring, while keeping access to the underlying resources. Which service fits?",
+   "options": [
+    "AWS CloudFormation",
+    "AWS Elastic Beanstalk",
+    "Amazon EC2",
+    "AWS Batch"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Platform as a service for web apps.",
+   "explanation": "Elastic Beanstalk deploys and manages web applications: you upload code and it provisions and runs the environment. CloudFormation provisions resources from templates, but you still define all the infrastructure yourself."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A website's relational database is overloaded by the same read queries repeated over and over. The company wants an in-memory cache with sub-millisecond reads in front of the database. Which service fits?",
+   "options": [
+    "Amazon RDS Multi-AZ",
+    "Amazon Redshift",
+    "Amazon ElastiCache",
+    "Amazon S3 Glacier"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "In-memory caching.",
+   "explanation": "ElastiCache (Valkey, Redis OSS or Memcached) caches frequent query results in memory, which offloads reads from the database. Multi-AZ provides a standby for high availability; it doesn't offload reads."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company wants to always keep at least two healthy EC2 instances running, replace unhealthy ones automatically, and add instances when CPU load rises. Which service does this?",
+   "options": [
+    "Elastic Load Balancing",
+    "Amazon CloudWatch",
+    "Amazon Route 53",
+    "Amazon EC2 Auto Scaling"
+   ],
+   "answer": [
+    3
+   ],
+   "hint": "Desired, minimum and maximum capacity.",
+   "explanation": "EC2 Auto Scaling keeps the desired number of healthy instances and scales on policies such as CPU utilization. Elastic Load Balancing spreads traffic across instances, but it doesn't launch or replace them."
+  },
+  {
+   "domain": "Cloud Technology & Services",
+   "q": "A company wants to automatically identify objects, scenes and faces in millions of uploaded photos without building its own ML models. Which service fits?",
+   "options": [
+    "Amazon Textract",
+    "Amazon Rekognition",
+    "Amazon Comprehend",
+    "Amazon Polly"
+   ],
+   "answer": [
+    1
+   ],
+   "hint": "Image and video analysis.",
+   "explanation": "Rekognition is a pre-trained service for analyzing images and video, including objects, faces and unsafe content. Textract extracts text and data from documents, and Comprehend analyzes text."
+  },
+  {
+   "domain": "Billing, Pricing & Support",
+   "q": "Management wants to see AWS costs broken down by project and department across a shared account. What should the company do?",
+   "options": [
+    "Create a separate VPC for each department",
+    "Use the AWS Pricing Calculator",
+    "Tag resources, activate them as cost allocation tags, and filter by tag in Cost Explorer",
+    "Turn on AWS Trusted Advisor"
+   ],
+   "answer": [
+    2
+   ],
+   "hint": "Labels that appear in billing data.",
+   "explanation": "Cost allocation tags, once activated in the Billing console, let Cost Explorer and the cost reports group spend by project or department. A VPC is a network boundary, not a billing dimension."
+  }
+ ]
+}
