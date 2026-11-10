@@ -6,4 +6,4 @@ Interactive practice quizzes for AWS Certified Cloud Practitioner (CLF-C02).
 - `quizzes/YYYY-MM-DD.json`: one quiz per day
 - `quizzes/index.json`: list of available dates
 
-Run it locally with `python3 -m http.server` and open http://localhost:8000, or turn on GitHub Pages (Settings → Pages → deploy from branch `main`, root).
+Run it locally with `python3 -m http.server` and open http://localhost:8000, or turn on GitHub Pages (Settings → Pages → deploy from branch `master`, root).
