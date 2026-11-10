@@ -1,0 +1,137 @@
+[
+ {
+  "id": "2026-11-10#1",
+  "domain": "Cloud Concepts",
+  "q": "A company wants to make sure its cloud workloads are run at agreed service levels, with mature monitoring, incident and problem management, and capacity planning. Which AWS CAF perspective covers this?",
+  "answer": [
+   "Operations"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "Governance"
+  ]
+ },
+ {
+  "id": "2026-11-10#2",
+  "domain": "Security & Compliance",
+  "q": "An IAM user is in a group whose policy allows s3:*. A policy attached directly to the user explicitly denies s3:DeleteObject on bucket 'reports'. What happens when the user tries to delete an object in 'reports'?",
+  "answer": [
+   "Denied, because an explicit deny overrides any allow"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "Allowed, because the most permissive policy wins"
+  ]
+ },
+ {
+  "id": "2026-11-10#3",
+  "domain": "Security & Compliance",
+  "q": "A company must continuously check whether all EBS volumes are encrypted, keep a history of resource configuration changes, and fix noncompliant resources automatically. Which service should it use?",
+  "answer": [
+   "AWS Config rules with remediation"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "AWS Trusted Advisor"
+  ]
+ },
+ {
+  "id": "2026-11-10#4",
+  "domain": "Security & Compliance",
+  "q": "Auditors in a central security account need read-only access to resources in 20 member accounts of an AWS Organization. The company does not want to create IAM users in each account. What is the recommended approach?",
+  "answer": [
+   "Create an IAM role in each member account that trusts the security account, and have auditors assume it through AWS STS"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "Add resource-based policies to every S3 bucket"
+  ]
+ },
+ {
+  "id": "2026-11-10#5",
+  "domain": "Cloud Technology & Services",
+  "q": "An order-processing flow must validate payment, reserve inventory, wait for a human approval step, then ship. It needs retries, error branches, and a visual view of each execution's state. Which service fits best?",
+  "answer": [
+   "AWS Step Functions"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "Amazon SNS"
+  ]
+ },
+ {
+  "id": "2026-11-10#6",
+  "domain": "Cloud Technology & Services",
+  "q": "A company has 40 VPCs across several accounts plus site-to-site VPN connections to on premises. Its full mesh of VPC peering connections has become hard to manage. Which service makes the network topology simpler?",
+  "answer": [
+   "AWS Transit Gateway"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "AWS Direct Connect"
+  ]
+ },
+ {
+  "id": "2026-11-10#7",
+  "domain": "Cloud Technology & Services",
+  "q": "A fraud-detection team needs to query multi-hop relationships between accounts, devices, IP addresses, and transactions with low latency. Which database should it use?",
+  "answer": [
+   "Amazon Neptune"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "Amazon Redshift"
+  ]
+ },
+ {
+  "id": "2026-11-10#8",
+  "domain": "Billing, Pricing & Support",
+  "q": "A company is bringing its own licenses to AWS, and they are licensed per physical socket or core. It needs visibility into the underlying sockets and cores, and control over instance placement, to stay compliant. Which EC2 option fits?",
+  "answer": [
+   "Dedicated Hosts"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "Spot Instances"
+  ]
+ },
+ {
+  "id": "2026-11-10#9",
+  "domain": "Billing, Pricing & Support",
+  "q": "Finance wants to be alerted automatically to unusual spending spikes, with a root-cause breakdown, without setting fixed dollar thresholds for every service. Which tool should it use?",
+  "answer": [
+   "AWS Cost Anomaly Detection"
+  ],
+  "misses": 1,
+  "firstMissed": "2026-11-10",
+  "status": "open",
+  "lastMissed": "2026-11-10",
+  "lastPicked": [
+   "AWS Trusted Advisor"
+  ]
+ }
+]
