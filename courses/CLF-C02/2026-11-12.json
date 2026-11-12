@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-12",
+  "title": "Daily CLF-C02 quiz — 2026-11-12",
+  "questions": [
+    {
+      "domain": "Security & Compliance",
+      "q": "A developer belongs to two IAM groups. Group A's policy allows dynamodb:* on all tables. Group B's policy explicitly denies dynamodb:DeleteTable. The developer signed in with MFA and tries to delete a table. What is the result?",
+      "options": [
+        "Allowed, because signing in with MFA overrides the deny",
+        "Allowed, because Group A grants dynamodb:* on all tables",
+        "Denied, because an explicit deny in any applicable policy overrides every allow",
+        "Allowed only if Group A's policy was attached after Group B's"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "IAM evaluation has one rule that beats everything else, and it doesn't care how the user signed in.",
+      "explanation": "IAM evaluates all applicable policies, and an explicit deny always wins over any allow. MFA only matters when a policy has an MFA condition key (aws:MultiFactorAuthPresent); here there is none, so MFA changes nothing.",
+      "homework": true,
+      "reviewOf": "2026-11-10#2"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A CI/CD pipeline running in a shared tools account must deploy CloudFormation stacks into the production account. The security team forbids long-term access keys. What is the recommended way to grant the pipeline access?",
+      "options": [
+        "Create an IAM user in the production account and store its access keys in the pipeline",
+        "Add resource-based policies to every resource in the production account that allow the tools account",
+        "Share the production account's root user credentials with the pipeline through AWS Secrets Manager",
+        "Create an IAM role in the production account that trusts the tools account, and have the pipeline assume it with AWS STS"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Look for the option that gives temporary credentials and works for any service.",
+      "explanation": "Cross-account access is done by assuming an IAM role whose trust policy allows the other account; STS returns temporary credentials. Resource-based policies exist only for some services (S3, KMS, SQS, etc.) and would have to be maintained on every resource, so they are not a general way to grant deployment access.",
+      "homework": true,
+      "reviewOf": "2026-11-10#4"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A retailer has 25 VPCs in several AWS accounts and multiple branch offices connected by Site-to-Site VPN. It wants one central hub that routes traffic between all VPCs and the on-premises networks instead of managing individual connections. Which service should it use?",
+      "options": [
+        "AWS Direct Connect",
+        "AWS Transit Gateway",
+        "VPC peering between every pair of VPCs",
+        "Amazon Route 53 Resolver"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "You need a regional router that many networks attach to, not a physical link.",
+      "explanation": "AWS Transit Gateway acts as a hub-and-spoke router that connects many VPCs and VPN or Direct Connect attachments. Direct Connect is only a dedicated private network link from on premises to AWS; it does not interconnect VPCs with each other.",
+      "homework": true,
+      "reviewOf": "2026-11-10#6"
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's architecture review focuses on maximizing the utilization of provisioned resources, preferring managed services, choosing Regions partly by their energy mix, and reducing the downstream impact of its workloads on the environment. Which Well-Architected pillar is being applied?",
+      "options": [
+        "Cost Optimization",
+        "Performance Efficiency",
+        "Reliability",
+        "Sustainability"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The key phrase is about the environment, not money.",
+      "explanation": "The Sustainability pillar focuses on minimizing the environmental impact of workloads, including high utilization and Region choice. Cost Optimization also likes high utilization, but its goal is delivering business value at the lowest price, not reducing environmental impact."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "AWS can offer lower pay-as-you-go prices than a single company could reach on its own, because it aggregates usage from hundreds of thousands of customers. Which advantage of cloud computing does this describe?",
+      "options": [
+        "Benefit from massive economies of scale",
+        "Trade fixed expense for variable expense",
+        "Go global in minutes",
+        "Stop guessing capacity"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Think about what happens to unit cost when you buy at enormous volume.",
+      "explanation": "Economies of scale means AWS's huge aggregate usage lowers its costs, which it passes on as lower prices. Trading fixed for variable expense is about paying only for what you use instead of investing up front, not about why the price itself is lower."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "Dozens of Linux EC2 instances spread across three Availability Zones must read and write the same files at the same time through a standard file system interface. Storage should grow and shrink automatically. Which service fits best?",
+      "options": [
+        "Amazon EBS",
+        "Amazon EFS",
+        "EC2 instance store",
+        "Amazon S3 Glacier Flexible Retrieval"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Block volumes live in one AZ; you need something many instances can mount at once.",
+      "explanation": "Amazon EFS is a fully managed, elastic NFS file system that many instances across multiple AZs can mount concurrently. An EBS volume is block storage tied to a single AZ and normally attached to one instance, so it can't serve as a shared Multi-AZ file system."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A media company stores petabytes of assets in Amazon S3. Some files are popular for a while, then rarely touched, and the team can't predict which. It wants to cut storage costs automatically without retrieval fees or performance impact when a file becomes popular again. Which storage class should it use?",
+      "options": [
+        "S3 Standard-Infrequent Access",
+        "S3 One Zone-Infrequent Access",
+        "S3 Intelligent-Tiering",
+        "S3 Glacier Deep Archive"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The access pattern is unknown and changing, so let S3 decide.",
+      "explanation": "S3 Intelligent-Tiering monitors access and automatically moves objects between tiers, with no retrieval fees and no operational overhead. Standard-IA charges a per-GB retrieval fee and requires you to know in advance that data is infrequently accessed."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company's public web application sits behind an Application Load Balancer. Which TWO threats can AWS WAF help protect against? (Choose two.)",
+      "options": [
+        "SQL injection attempts in HTTP requests",
+        "Unencrypted EBS volumes attached to the web servers",
+        "Cross-site scripting (XSS) in request parameters",
+        "Operating system vulnerabilities on the EC2 instances",
+        "Compromised IAM access keys used from unusual locations"
+      ],
+      "answer": [
+        0,
+        2
+      ],
+      "hint": "WAF inspects web requests at Layer 7; pick the attacks that live inside an HTTP request.",
+      "explanation": "AWS WAF filters HTTP(S) requests with rules, including managed rules for SQL injection and XSS. OS vulnerabilities are found by Amazon Inspector and suspicious key usage by Amazon GuardDuty; WAF does not scan hosts or credentials."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A studio renders animation frames in a batch job that can be stopped and restarted at any time without losing work, and deadlines are flexible. Which EC2 purchasing option gives the lowest cost?",
+      "options": [
+        "On-Demand Instances",
+        "Reserved Instances",
+        "Dedicated Instances",
+        "Spot Instances"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The workload tolerates interruption; use AWS's spare capacity.",
+      "explanation": "Spot Instances use spare EC2 capacity at discounts of up to 90% compared with On-Demand, and are ideal for fault-tolerant, flexible workloads. Reserved Instances need a 1- or 3-year commitment and suit steady-state usage, not interruptible batch jobs."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company has 12 AWS accounts, each billed separately. It wants a single monthly bill and to combine usage across accounts so it reaches lower volume-pricing tiers for services like Amazon S3. What should it use?",
+      "options": [
+        "Consolidated billing in AWS Organizations",
+        "AWS Budgets",
+        "AWS Cost Explorer",
+        "AWS Pricing Calculator"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "You need a feature that actually links accounts together for billing.",
+      "explanation": "Consolidated billing in AWS Organizations gives one bill for all member accounts and aggregates usage for volume discounts and shared Reserved Instance or Savings Plans benefits. Cost Explorer only visualizes and analyzes costs; it doesn't merge accounts or change pricing."
+    }
+  ]
+}
