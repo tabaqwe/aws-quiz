@@ -1,0 +1,165 @@
+{
+  "date": "2026-11-13",
+  "title": "Daily CLF-C02 quiz — 2026-11-13",
+  "questions": [
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A social media app wants to recommend 'people you may know' by traversing friends-of-friends connections and shared interests in real time, across billions of relationships. Which AWS database is purpose-built for this?",
+      "options": [
+        "Amazon Redshift",
+        "Amazon ElastiCache",
+        "Amazon Neptune",
+        "Amazon RDS for PostgreSQL"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The data is mostly about connections between things, and the queries hop along those connections.",
+      "explanation": "Amazon Neptune is a managed graph database designed for fast traversal of highly connected data such as social networks and fraud rings. Amazon Redshift is a columnar data warehouse for large analytical (OLAP) queries and aggregations, not for low-latency multi-hop relationship lookups.",
+      "homework": true,
+      "reviewOf": "2026-11-10#7"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company's database software license is tied to the number of physical cores on the server, and the license terms require the workload to stay on the same physical server over time. Which EC2 option meets these requirements?",
+      "options": [
+        "Spot Instances",
+        "Dedicated Instances",
+        "On-Demand Capacity Reservations",
+        "Dedicated Hosts",
+        "Standard Reserved Instances"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "You need visibility into the physical sockets and cores, and control over which physical server is used.",
+      "explanation": "Dedicated Hosts give you a whole physical server with visibility into sockets and cores and instance placement (host affinity), which is what bring-your-own-license terms like these require. Spot Instances are just a discounted pricing model for spare capacity that can be interrupted; they give no control or visibility of the underlying hardware.",
+      "homework": true,
+      "reviewOf": "2026-11-10#8"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A misconfigured Lambda function once ran in a loop for days before anyone noticed the bill. Finance wants AWS to use machine learning to spot unusual spending patterns early, show the likely root cause (service, account, Region), and send alerts, without having to define a fixed spending threshold. Which service should it use?",
+      "options": [
+        "AWS Trusted Advisor",
+        "AWS Cost Anomaly Detection",
+        "AWS Budgets",
+        "AWS Pricing Calculator"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The key words are 'unusual patterns' and 'no fixed threshold'.",
+      "explanation": "AWS Cost Anomaly Detection uses machine learning to learn normal spend, flags anomalies with a root-cause analysis, and alerts via email or SNS. Trusted Advisor gives best-practice checks such as idle or underused resources, but it does not monitor spending trends or alert on sudden spikes; AWS Budgets needs a threshold you set.",
+      "homework": true,
+      "reviewOf": "2026-11-10#9"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "An external auditor asks a company for AWS's own SOC 2 report and ISO 27001 certificate to confirm the security controls of the underlying AWS infrastructure. Where can the company download these documents on demand?",
+      "options": [
+        "AWS Audit Manager",
+        "AWS Security Hub",
+        "AWS Config",
+        "AWS Artifact"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "You're looking for AWS's compliance paperwork, not evidence about your own resources.",
+      "explanation": "AWS Artifact is a self-service portal for AWS compliance reports (SOC, PCI, ISO) and agreements such as the BAA. AWS Audit Manager collects evidence about how your own workloads comply with frameworks; it does not provide AWS's third-party audit reports."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company wants to automatically and continuously scan its EC2 instances, container images in Amazon ECR, and Lambda functions for known software vulnerabilities (CVEs) and unintended network exposure. Which service should it use?",
+      "options": [
+        "Amazon Inspector",
+        "Amazon GuardDuty",
+        "Amazon Macie",
+        "AWS Shield"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Think 'vulnerability management' of workloads, not threat detection from logs.",
+      "explanation": "Amazon Inspector continuously scans EC2, ECR images and Lambda functions for software vulnerabilities and network reachability issues. GuardDuty detects active threats by analyzing logs such as CloudTrail, VPC Flow Logs and DNS logs; it does not scan software packages for CVEs."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A news site served through Amazon CloudFront and Route 53 has been hit by large DDoS attacks. It wants enhanced detection, 24/7 access to the AWS DDoS response team, and credits for scaling charges caused by an attack. What should it use?",
+      "options": [
+        "AWS Shield Standard",
+        "AWS WAF with rate-based rules only",
+        "AWS Shield Advanced",
+        "Amazon GuardDuty"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "One tier of this service is automatic and free; the other adds expert help and cost protection.",
+      "explanation": "AWS Shield Advanced adds enhanced DDoS detection and mitigation, access to the Shield Response Team, and cost protection for scaling during an attack. Shield Standard is free and automatic for all customers but protects only against common network and transport layer attacks, with no response team or cost protection."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "During migration, a company moves its web application to Amazon EC2 and replaces its self-managed MySQL server with Amazon RDS for MySQL to reduce database administration, without changing the application's core architecture. Which migration strategy is this?",
+      "options": [
+        "Rehost",
+        "Replatform",
+        "Refactor",
+        "Relocate"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "It's more than a pure lift-and-shift, but much less than a redesign.",
+      "explanation": "Replatform ('lift, tinker and shift') makes a few cloud optimizations, such as moving to a managed database, without changing the core architecture. Rehost would move the servers as they are, keeping the self-managed MySQL on EC2."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "Which TWO are design principles of the Reliability pillar of the AWS Well-Architected Framework? (Choose two.)",
+      "options": [
+        "Automatically recover from failure",
+        "Adopt a consumption model",
+        "Scale horizontally to increase aggregate workload availability",
+        "Perform operations as code",
+        "Use serverless architectures"
+      ],
+      "answer": [
+        0,
+        2
+      ],
+      "hint": "Pick the principles about surviving failures and avoiding single points of failure.",
+      "explanation": "Reliability's design principles include automatically recovering from failure and scaling horizontally so that one failed resource has less impact (also: test recovery, stop guessing capacity, manage change through automation). 'Adopt a consumption model' is a Cost Optimization principle, 'perform operations as code' is Operational Excellence, and 'use serverless architectures' is Performance Efficiency."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company runs its primary site in us-east-1 and a standby copy in eu-west-1. If the primary site becomes unhealthy, DNS must automatically send users to the standby. Which Amazon Route 53 routing policy should it use?",
+      "options": [
+        "Simple routing",
+        "Weighted routing",
+        "Geolocation routing",
+        "Failover routing"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Active-passive setup plus health checks.",
+      "explanation": "Failover routing, combined with Route 53 health checks, returns the primary record while it is healthy and switches to the secondary when it fails. Weighted routing splits traffic by percentages you set and does not by itself implement an active-passive standby."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company wants to build a generative AI assistant using foundation models from several providers, such as Anthropic, Meta and Amazon, through a single API. It does not want to manage infrastructure or train models from scratch. Which service fits best?",
+      "options": [
+        "Amazon SageMaker AI",
+        "Amazon Bedrock",
+        "Amazon Comprehend",
+        "Amazon Rekognition"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Look for the fully managed service whose whole purpose is offering ready-made foundation models.",
+      "explanation": "Amazon Bedrock is a fully managed, serverless service that gives API access to foundation models from multiple providers, with options to customize them. SageMaker AI is aimed at building, training and deploying your own ML models, which means more work and infrastructure choices than this team wants."
+    }
+  ]
+}
