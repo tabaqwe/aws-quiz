@@ -1,0 +1,143 @@
+{
+  "date": "2026-11-14",
+  "title": "Daily CLF-C02 quiz — 2026-11-14",
+  "questions": [
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's AWS CAF readiness assessment shows that its teams cannot correlate logs, metrics and traces, so degraded application performance is only discovered when customers complain. Which AWS CAF perspective includes the capability that addresses this gap?",
+      "options": [
+        "Governance",
+        "Platform",
+        "Security",
+        "Operations"
+      ],
+      "answer": [3],
+      "hint": "Think about which perspective is about running workloads day to day, not about steering cloud programs and budgets.",
+      "explanation": "Observability is a capability of the Operations perspective, alongside event, incident and problem management and performance and capacity management. Governance is about orchestrating cloud initiatives, such as program and benefits management, risk management and cloud financial management, not about monitoring running workloads.",
+      "homework": true,
+      "reviewOf": "2026-11-10#1"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "An IAM user signs in with MFA. Her identity-based policy allows s3:PutObject on all buckets. The bucket 'invoices' (in the same account) has a bucket policy that explicitly denies s3:PutObject for her user ARN. What happens when she uploads an object to 'invoices'?",
+      "options": [
+        "The upload is denied, because an explicit deny in any applicable policy overrides an allow",
+        "The upload is allowed, because she authenticated with MFA",
+        "The upload is allowed, because identity-based policies take precedence over resource-based policies",
+        "The upload is allowed only if she also has a permissions boundary"
+      ],
+      "answer": [0],
+      "hint": "In IAM policy evaluation, one kind of statement always wins, no matter where it is written or how the user signed in.",
+      "explanation": "AWS evaluates all applicable policies together, and an explicit deny in any of them (identity-based or resource-based) overrides every allow. MFA only matters when a policy has a condition that checks for it; signing in with MFA never cancels an explicit deny.",
+      "homework": true,
+      "reviewOf": "2026-11-10#2"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company requires that every S3 bucket blocks public access and that every resource carries a CostCenter tag. It wants these custom requirements evaluated continuously, a compliance timeline for each resource, and automatic remediation through Systems Manager Automation when a resource drifts. Which service should it use?",
+      "options": [
+        "AWS Trusted Advisor",
+        "AWS Config",
+        "AWS CloudTrail",
+        "Amazon Inspector"
+      ],
+      "answer": [1],
+      "hint": "You need rules you define yourself, a record of each resource's configuration over time, and remediation actions.",
+      "explanation": "AWS Config evaluates resources against managed or custom rules, records configuration history and compliance over time, and can trigger automatic remediation with Systems Manager Automation documents. Trusted Advisor runs a fixed set of AWS best-practice checks; you can't define your own rules, and it doesn't keep a configuration history per resource.",
+      "homework": true,
+      "reviewOf": "2026-11-10#3"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A batch analytics job on Amazon EC2 needs very low-latency, high-IOPS scratch space for temporary files. The files can be lost if the instance stops, and the company doesn't want to pay separately for persistent storage. Which storage option fits best?",
+      "options": [
+        "Amazon EBS General Purpose SSD (gp3) volume",
+        "Amazon EFS file system",
+        "Amazon S3 Standard",
+        "EC2 instance store"
+      ],
+      "answer": [3],
+      "hint": "The data is temporary, and the storage can be physically attached to the host.",
+      "explanation": "EC2 instance store is block storage on disks physically attached to the host, giving very low latency for temporary data at no extra charge beyond the instance; data is lost when the instance stops or terminates. EBS is network-attached persistent storage billed separately, which isn't needed for throwaway scratch data."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A bank wants to add a chatbot to its website and contact center that understands customers' typed or spoken requests, such as 'check my balance', and responds in a natural conversation. Which AWS service is designed to build this conversational interface?",
+      "options": [
+        "Amazon Polly",
+        "Amazon Lex",
+        "Amazon Transcribe",
+        "Amazon Comprehend"
+      ],
+      "answer": [1],
+      "hint": "Look for the service that combines speech recognition with understanding intent in a back-and-forth dialog.",
+      "explanation": "Amazon Lex builds conversational interfaces (chatbots and voice bots) using automatic speech recognition and natural language understanding to identify intents. Amazon Polly only turns text into lifelike speech; it doesn't understand what the customer is asking."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company's Amazon RDS for PostgreSQL database is overloaded by reporting queries, and the company also needs the database to fail over automatically if its Availability Zone fails. Which TWO actions meet these requirements? (Choose two.)",
+      "options": [
+        "Increase the frequency of manual DB snapshots",
+        "Create one or more read replicas and send the reporting queries to them",
+        "Move the database files to an EC2 instance store volume",
+        "Put AWS Storage Gateway in front of the database",
+        "Enable a Multi-AZ deployment with a standby in another Availability Zone"
+      ],
+      "answer": [1, 4],
+      "hint": "One goal is about spreading read load, the other is about high availability.",
+      "explanation": "Read replicas offload read-only traffic such as reporting, and a Multi-AZ deployment keeps a synchronous standby in another AZ with automatic failover. Snapshots help with backup and recovery but don't scale reads or provide automatic failover."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A fast-growing company wants to quickly set up a well-architected multi-account environment (landing zone) that follows AWS best practices, with prebuilt preventive and detective controls (guardrails) and a dashboard showing compliance across accounts. Which service should it use?",
+      "options": [
+        "AWS Security Hub",
+        "Amazon GuardDuty",
+        "AWS Control Tower",
+        "AWS Artifact"
+      ],
+      "answer": [2],
+      "hint": "The key words are 'set up' and 'landing zone' for many accounts.",
+      "explanation": "AWS Control Tower automates setting up a multi-account landing zone on AWS Organizations and applies managed controls (guardrails), with a dashboard of their compliance status. Security Hub aggregates and prioritizes security findings and runs best-practice checks, but it doesn't build or govern the account structure itself."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A startup in Europe signs a large customer in Japan. Within a day it deploys a copy of its application in the Asia Pacific (Tokyo) Region so Japanese users get low latency, without building any data center. Which benefit of the AWS Cloud does this show?",
+      "options": [
+        "Benefit from massive economies of scale",
+        "Go global in minutes",
+        "Trade fixed expense for variable expense",
+        "Stop guessing capacity"
+      ],
+      "answer": [1],
+      "hint": "Focus on where the application was deployed and how fast.",
+      "explanation": "Being able to deploy to AWS Regions around the world in minutes, giving users lower latency at minimal cost, is the 'go global in minutes' benefit. Economies of scale refers to lower prices from AWS aggregating usage across many customers, not to geographic reach."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A marketing team runs a website for a two-month campaign. Traffic is unpredictable, the instances must not be interrupted, and the team won't make any long-term commitment. Which EC2 pricing option fits best?",
+      "options": [
+        "Spot Instances",
+        "Reserved Instances with a 1-year term",
+        "On-Demand Instances",
+        "Compute Savings Plans"
+      ],
+      "answer": [2],
+      "hint": "Rule out anything that needs a commitment, then anything AWS can take back.",
+      "explanation": "On-Demand Instances are billed per second or hour with no commitment and aren't interrupted by AWS, which suits short-term, unpredictable workloads. Spot Instances are cheaper but can be reclaimed with a two-minute warning, so they don't meet the 'must not be interrupted' requirement."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company is certain it will keep running the M7g instance family in eu-west-1 for the next 3 years, though instance sizes and operating systems may change. It wants the largest discount a Savings Plan can offer for this pattern. Which option should it choose?",
+      "options": [
+        "EC2 Instance Savings Plans",
+        "Compute Savings Plans",
+        "On-Demand Capacity Reservations",
+        "Spot Instances with a Spot Fleet"
+      ],
+      "answer": [0],
+      "hint": "The commitment is to one instance family in one Region; trading flexibility for a bigger discount is fine here.",
+      "explanation": "EC2 Instance Savings Plans give the deepest Savings Plans discount (up to 72%) in exchange for committing to one instance family in one Region, while still letting you change size, OS and tenancy. Compute Savings Plans are more flexible (any family, Region, Fargate and Lambda) but offer a smaller maximum discount (up to 66%)."
+    }
+  ]
+}
