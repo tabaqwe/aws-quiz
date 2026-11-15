@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-15",
+  "title": "Daily CLF-C02 quiz — 2026-11-15",
+  "questions": [
+    {
+      "domain": "Security & Compliance",
+      "q": "A company hires a third-party monitoring vendor that runs its software in its own AWS account. The vendor needs read-only access to the company's Amazon CloudWatch metrics and EC2 descriptions. The company does not want to hand out long-term credentials. What is the recommended way to grant this access?",
+      "options": [
+        "Create an IAM user for the vendor and email it an access key and secret key",
+        "Add resource-based policies to each EC2 instance and CloudWatch metric that name the vendor's account",
+        "Create an IAM role with read-only permissions whose trust policy allows the vendor's AWS account (with an external ID), and let the vendor assume it through AWS STS",
+        "Share the root user credentials of a separate read-only account with the vendor"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Look for the option that gives temporary credentials and works for any service, not one that depends on each resource supporting a policy of its own.",
+      "explanation": "Cross-account access is granted with an IAM role that trusts the other account; the vendor calls STS AssumeRole and receives short-lived credentials, and an external ID guards against the confused-deputy problem. Resource-based policies are not the answer here: only some resources (such as S3 buckets or KMS keys) support them, EC2 instances and CloudWatch metrics do not, and managing a policy per resource does not scale.",
+      "homework": true,
+      "reviewOf": "2026-11-10#4"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A video platform's upload pipeline must transcode each video, then generate thumbnails and subtitles in parallel, wait until both finish, and finally publish the video. Failed steps must be retried with backoff, and operators want to see exactly which step every upload is on. Which service should coordinate this workflow?",
+      "options": [
+        "Amazon SNS",
+        "Amazon SQS",
+        "AWS Step Functions",
+        "Amazon CloudWatch Logs"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Sending a message to many subscribers is not the same as tracking a multi-step process from start to finish.",
+      "explanation": "AWS Step Functions is a serverless orchestrator: a state machine defines sequential and parallel steps, waits, retries with backoff and error branches, and the console shows the state of each execution. Amazon SNS only fans out messages to subscribers; it has no idea of steps, does not wait for parallel tasks to finish, and keeps no per-workflow execution state.",
+      "homework": true,
+      "reviewOf": "2026-11-10#5"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "After an acquisition, a company has 15 VPCs in one Region spread across several AWS accounts, and an existing AWS Direct Connect link to its data center. It wants every VPC to reach every other VPC and the data center through one central hub instead of managing dozens of point-to-point connections. Which service provides that hub?",
+      "options": [
+        "A second AWS Direct Connect connection",
+        "AWS Transit Gateway",
+        "VPC peering between every pair of VPCs",
+        "An internet gateway in each VPC"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The company already has its private link to the data center. What is missing is something that routes traffic between many networks.",
+      "explanation": "AWS Transit Gateway is a regional hub-and-spoke router: VPCs, VPN connections and Direct Connect gateways attach to it once, and it routes traffic among all of them. Direct Connect is only a dedicated network link between on premises and AWS; adding another one does not let VPCs route to each other.",
+      "homework": true,
+      "reviewOf": "2026-11-10#6"
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "During an architecture review, an architect recommends centralizing identity management, granting least-privilege access, turning on logging and monitoring so that every change can be traced, and applying controls at every layer from the network edge to the application code. Which AWS Well-Architected Framework pillar do these recommendations belong to?",
+      "options": [
+        "Operational Excellence",
+        "Reliability",
+        "Cost Optimization",
+        "Security"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Match the recommendations to the pillar whose design principles include a strong identity foundation and traceability.",
+      "explanation": "'Implement a strong identity foundation', 'enable traceability' and 'apply security at all layers' are design principles of the Security pillar. Operational Excellence also uses monitoring, but its focus is running and improving workloads (operations as code, small reversible changes, learning from failures), not protecting data and access."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A team wants to review its workload against AWS best practices by answering a structured set of questions for each pillar, record its answers, see a list of high and medium risks, and track improvement over time in milestones. Which AWS offering should it use?",
+      "options": [
+        "AWS Trusted Advisor",
+        "AWS Well-Architected Tool",
+        "AWS Config",
+        "AWS Health Dashboard"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The team is answering questions about its design, not waiting for automated checks of resources in its account.",
+      "explanation": "The AWS Well-Architected Tool is a free console service where you document a workload, answer the Well-Architected questions per pillar, get identified risks with improvement plans, and save milestones. Trusted Advisor instead runs automated checks against your account's resources (for example idle instances or open security groups); it does not walk you through a design review."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company has 60 AWS accounts in AWS Organizations. The security team wants to centrally define AWS WAF rules and security group policies once, have them applied automatically to every existing and newly created account, and see which resources are noncompliant. Which service should it use?",
+      "options": [
+        "AWS Firewall Manager",
+        "AWS WAF configured separately in each account",
+        "Amazon GuardDuty",
+        "AWS Shield Standard"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "The key words are 'centrally' and 'every account in the organization', not the firewall rules themselves.",
+      "explanation": "AWS Firewall Manager uses AWS Organizations to centrally configure and enforce AWS WAF rules, Shield Advanced protections, security group policies and Network Firewall across accounts, including new ones, and reports noncompliant resources. Configuring AWS WAF account by account works, but it is the manual, per-account approach the company is trying to avoid."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company runs an application on AWS Lambda. Under the AWS shared responsibility model, which TWO tasks are AWS's responsibility? (Choose two.)",
+      "options": [
+        "Writing secure function code and validating its input",
+        "Patching the operating system of the servers that run the functions",
+        "Defining the permissions in the function's IAM execution role",
+        "Classifying and encrypting the customer data the function processes",
+        "Physically securing the data centers and hardware"
+      ],
+      "answer": [
+        1,
+        4
+      ],
+      "hint": "With a serverless service, AWS takes over everything below your code. What you write and what you grant stay with you.",
+      "explanation": "For Lambda, AWS manages the underlying infrastructure, including the operating system, runtime patching and the physical security of facilities and hardware. The customer remains responsible for its own function code, the IAM permissions it grants, and how it classifies and protects its data."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A game studio's players are concentrated in one large metropolitan area that is far from the nearest AWS Region. The studio needs to run EC2 game servers in AWS-managed infrastructure close to those players for single-digit millisecond latency, without installing any hardware itself. Which option fits best?",
+      "options": [
+        "AWS Outposts",
+        "Amazon CloudFront edge locations",
+        "AWS Local Zones",
+        "A new Availability Zone in the nearest Region"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "One option puts AWS racks inside your own building; you want AWS to run the infrastructure in the city for you.",
+      "explanation": "AWS Local Zones are extensions of a Region placed in large metro areas, where you can run EC2 and other services close to end users for single-digit millisecond latency. AWS Outposts would require installing AWS-managed racks in the studio's own data center, and CloudFront edge locations cache content and do not host EC2 game servers."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company has been running a steady mix of EC2 and AWS Fargate workloads for six months. Before committing, finance wants AWS to recommend how much Savings Plans commitment to buy, based on the company's actual past usage, with the estimated savings. Which tool should it use?",
+      "options": [
+        "AWS Pricing Calculator",
+        "AWS Budgets",
+        "AWS Cost Explorer",
+        "AWS Artifact"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The recommendation must be based on what the company has already used, not on an architecture it types in.",
+      "explanation": "AWS Cost Explorer (in the Billing and Cost Management console) analyzes your historical usage and provides Savings Plans and Reserved Instance purchase recommendations with estimated savings. The AWS Pricing Calculator only estimates costs for configurations you enter manually; it does not look at your past usage."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A developer whose account has only the AWS Basic Support plan has a question about configuring Amazon API Gateway. She wants to search answers and ask the AWS community and AWS experts, at no extra cost. Which resource should she use?",
+      "options": [
+        "Open a technical support case in the AWS Support Center",
+        "Contact her designated Technical Account Manager (TAM)",
+        "Ask AWS Trusted Advisor",
+        "AWS re:Post"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Basic Support covers billing and account questions, but not one-to-one technical help.",
+      "explanation": "AWS re:Post is a free, community-driven Q&A service where AWS customers, partners and AWS employees answer technical questions, and it includes the Knowledge Center. Basic Support does not include technical support cases with Cloud Support Engineers; those require a paid plan, and a designated TAM comes only with the highest support tiers."
+    }
+  ]
+}
