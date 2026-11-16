@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-16",
+  "title": "Daily CLF-C02 quiz — 2026-11-16",
+  "questions": [
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A manufacturer models its supply chain as parts, suppliers, sub-suppliers and raw materials. When a raw material becomes scarce, an application must instantly find every finished product that depends on it, even through five or six tiers of suppliers. Which AWS database is designed for this kind of query?",
+      "options": [
+        "Amazon Redshift",
+        "Amazon DynamoDB",
+        "Amazon RDS for MySQL",
+        "Amazon Neptune"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The key work here is following connections hop by hop, not adding up large volumes of rows.",
+      "explanation": "Amazon Neptune is a managed graph database built to store relationships and traverse many hops between connected entities with low latency. Amazon Redshift is a columnar data warehouse optimized for aggregate analytics (sums, trends, reports) over large structured datasets, not for real-time relationship traversal.",
+      "homework": true,
+      "reviewOf": "2026-11-10#7"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company moves a Windows Server workload to Amazon EC2 using its existing per-core licenses. The license terms require it to report the number of physical cores used and to keep instances on the same physical server after they are stopped and restarted. Which EC2 option meets these requirements?",
+      "options": [
+        "Spot Instances",
+        "Dedicated Hosts",
+        "Dedicated Instances",
+        "On-Demand Instances on shared tenancy"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Think about which option is about the physical server itself, not about how the capacity is priced.",
+      "explanation": "Dedicated Hosts give you a whole physical server with visibility into its sockets and cores and host affinity, which is what per-socket or per-core BYOL licensing needs. Spot Instances are a pricing model for spare capacity that can be interrupted; they give no control over or visibility into the underlying hardware, and Dedicated Instances are single-tenant but also hide socket/core details and placement.",
+      "homework": true,
+      "reviewOf": "2026-11-10#8"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A developer accidentally left several large GPU instances running in a Region the company never uses. The company wants AWS to learn each account's normal spending pattern, flag deviations like this within a day, send an email or SNS alert, and show which service, account and Region caused it, without anyone having to pick dollar thresholds. Which tool should it set up?",
+      "options": [
+        "AWS Trusted Advisor",
+        "AWS Budgets",
+        "AWS Cost Anomaly Detection",
+        "AWS Cost Explorer"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Look for the tool that learns a baseline on its own instead of comparing against a checklist or a number you set.",
+      "explanation": "AWS Cost Anomaly Detection uses machine learning to learn historical spend, detects unusual cost spikes, alerts via email or SNS, and provides a root-cause analysis by service, account, Region and usage type. AWS Trusted Advisor compares your resources against a fixed set of best-practice checks (such as idle or underutilized resources); it does not model your spending pattern or send anomaly alerts with root cause, and AWS Budgets needs thresholds you define.",
+      "homework": true,
+      "reviewOf": "2026-11-10#9"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "Before a privacy audit, a company needs to find out which of its thousands of Amazon S3 buckets contain personally identifiable information such as passport numbers and credit card data, and to be alerted if any of those buckets are publicly accessible. Which service should it use?",
+      "options": [
+        "Amazon Macie",
+        "Amazon GuardDuty",
+        "Amazon Inspector",
+        "AWS Shield"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "The task is classifying the data stored in S3, not detecting attackers or software flaws.",
+      "explanation": "Amazon Macie uses machine learning and pattern matching to discover and classify sensitive data such as PII in Amazon S3, and it reports on bucket security posture such as public access. Amazon GuardDuty detects threats from activity logs and does not inspect object contents for sensitive data."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "An architecture review recommends that a team use managed services such as Amazon DynamoDB instead of building its own database cluster, deploy to multiple Regions to lower latency for global users, adopt serverless architectures, and regularly test new instance types to find the best fit. Which pillar of the AWS Well-Architected Framework do these recommendations mainly support?",
+      "options": [
+        "Operational Excellence",
+        "Cost Optimization",
+        "Performance Efficiency",
+        "Reliability"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "These ideas are about using computing resources efficiently to meet requirements as demand and technology change.",
+      "explanation": "Performance Efficiency's design principles include democratizing advanced technologies, going global in minutes, using serverless architectures, and experimenting more often. Cost Optimization focuses on spending only on what you need and measuring efficiency in money; lower latency and testing new instance types for fit are performance concerns."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company notices unusual outbound traffic from an EC2 instance to known cryptocurrency-mining domains, plus API calls from an IP address on a threat list. It wants a managed service that continuously analyzes AWS CloudTrail events, VPC Flow Logs and DNS logs to detect this kind of activity without deploying agents or appliances. Which service fits?",
+      "options": [
+        "Amazon Inspector",
+        "AWS Config",
+        "Amazon GuardDuty",
+        "Amazon Macie"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "You need intelligent threat detection from log activity, not vulnerability scanning or configuration tracking.",
+      "explanation": "Amazon GuardDuty is a threat-detection service that analyzes CloudTrail management events, VPC Flow Logs and DNS logs with threat intelligence and machine learning to find malicious or unauthorized behavior such as crypto-mining. Amazon Inspector scans workloads for software vulnerabilities and network exposure; it does not detect active threats from log activity."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "Analysts want to run ad hoc SQL queries directly against CSV and Parquet log files stored in Amazon S3. They do not want to load the data into a database or manage any servers, and they want to pay only for the data each query scans. Which service should they use?",
+      "options": [
+        "Amazon RDS",
+        "Amazon Athena",
+        "Amazon EMR",
+        "Amazon ElastiCache"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Look for the serverless option that queries data where it already sits.",
+      "explanation": "Amazon Athena is a serverless, interactive query service that runs standard SQL directly on data in Amazon S3, with pricing based on data scanned. Amazon EMR runs big data frameworks such as Spark on clusters you configure, which is more than needed for ad hoc SQL and is not priced per query."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "An application on Amazon EC2 connects to an Amazon RDS database with a username and password that are currently hard-coded in its configuration file. The security team wants the credentials stored encrypted, retrieved by the application at runtime through an API, and rotated automatically every 30 days. Which service best meets these requirements?",
+      "options": [
+        "AWS Certificate Manager",
+        "IAM access keys stored on the instance",
+        "AWS Key Management Service",
+        "AWS Secrets Manager"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Focus on the requirement for built-in automatic rotation of database credentials.",
+      "explanation": "AWS Secrets Manager stores secrets encrypted with KMS, lets applications retrieve them at runtime, and provides built-in automatic rotation for Amazon RDS credentials. AWS KMS creates and manages the encryption keys themselves; it is not a store for database passwords and does not rotate them."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A small development team wants to deploy a Java web application by simply uploading its code. AWS should automatically handle capacity provisioning, load balancing, Auto Scaling and health monitoring, while the team keeps full access to the underlying EC2 instances if needed. Which service should the team use?",
+      "options": [
+        "AWS Elastic Beanstalk",
+        "AWS CloudFormation",
+        "Amazon Lightsail",
+        "AWS CodeCommit"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Find the service where you provide the application and it builds the environment around it.",
+      "explanation": "AWS Elastic Beanstalk is a platform service: you upload code and it provisions and manages the EC2 instances, load balancer, Auto Scaling and health monitoring, while you can still access the resources. AWS CloudFormation provisions infrastructure from templates you write; it does not take application code and manage the runtime environment for you."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's CFO asks why moving from its own data center to AWS would help the business. Which TWO are advantages of cloud computing as described by AWS? (Choose two.)",
+      "options": [
+        "Trade up-front capital expense for variable expense",
+        "AWS takes over all security responsibilities for the customer's data",
+        "Every application is guaranteed 100% availability",
+        "Increase speed and agility, because new resources are only a few clicks away",
+        "Lower prices require signing multi-year hardware contracts"
+      ],
+      "answer": [
+        0,
+        3
+      ],
+      "hint": "Two options describe how you pay and how fast you can move; the others overpromise or describe the old model.",
+      "explanation": "Trading capital expense for variable expense and increasing speed and agility are two of AWS's six advantages of cloud computing (along with economies of scale, stop guessing capacity, stop spending money running data centers, and going global in minutes). Security remains a shared responsibility, so AWS does not take it all over, and no service guarantees 100% availability."
+    }
+  ]
+}
