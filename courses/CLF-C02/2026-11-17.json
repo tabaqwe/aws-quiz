@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-17",
+  "title": "Daily CLF-C02 quiz — 2026-11-17",
+  "questions": [
+    {
+      "domain": "Cloud Concepts",
+      "q": "After moving to AWS, a company's leadership asks which AWS Cloud Adoption Framework (AWS CAF) perspective focuses on making sure cloud services are delivered at the levels the business needs: defining SLOs, setting up observability, handling incidents and problems, and planning capacity. Which perspective is it?",
+      "options": [
+        "Governance",
+        "Platform",
+        "Business",
+        "Operations"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Think about the team that keeps workloads running day to day, not the team that sets policies and controls risk.",
+      "explanation": "The Operations perspective covers observability, event/incident/problem management, change and release management, and performance and capacity management so services meet agreed levels. Governance is about orchestrating cloud initiatives, managing risk, portfolio and benefits, and cloud financial management, not running workloads day to day.",
+      "homework": true,
+      "reviewOf": "2026-11-10#1"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A finance team's IAM role has a policy that allows ec2:* on all resources. A second policy attached to the same role explicitly denies ec2:TerminateInstances. A team member signs in with MFA, assumes the role, and tries to terminate an instance. What is the result?",
+      "options": [
+        "The termination is denied, because an explicit deny always overrides an allow",
+        "The termination succeeds, because ec2:* is broader than the specific deny",
+        "The termination succeeds, because signing in with MFA overrides the deny",
+        "The termination is denied only if the instance has termination protection enabled"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "IAM evaluation has one rule that beats every allow, regardless of how the caller authenticated.",
+      "explanation": "In IAM policy evaluation, an explicit Deny in any applicable policy always overrides any Allow, so the request is denied. MFA only matters if a policy contains an MFA condition key (aws:MultiFactorAuthPresent); using MFA does not lift an explicit deny.",
+      "homework": true,
+      "reviewOf": "2026-11-10#2"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A security team needs to know at any moment whether all of its Amazon RDS databases have encryption at rest enabled, see a timeline of how each database's settings changed, and automatically trigger a fix when a rule is violated. Which AWS service is designed for this?",
+      "options": [
+        "AWS Config",
+        "AWS Trusted Advisor",
+        "Amazon Inspector",
+        "AWS CloudTrail"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "You need continuous evaluation against your own rules plus a recorded history of resource configurations.",
+      "explanation": "AWS Config records configuration history for resources, continuously evaluates them against Config rules, and can run automatic remediation through Systems Manager Automation. Trusted Advisor gives periodic best-practice recommendations across cost, security, and limits, but it does not let you define custom compliance rules, keep per-resource configuration history, or auto-remediate.",
+      "homework": true,
+      "reviewOf": "2026-11-10#3"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company must copy 60 TB of files from an on-premises NFS file server into Amazon S3 over its existing network connection, and then keep the two in sync every night until cutover. It wants the transfers automated, encrypted in transit, and checked for data integrity. Which service should it use?",
+      "options": [
+        "AWS Storage Gateway",
+        "AWS Direct Connect",
+        "AWS DataSync",
+        "AWS Transfer Family"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Look for the service whose job is moving and synchronizing data between storage systems, not giving on-premises apps ongoing access to cloud storage.",
+      "explanation": "AWS DataSync is an online data transfer service that automates and schedules copying between on-premises file systems (NFS/SMB) and AWS storage such as S3 or EFS, with encryption and integrity validation. AWS Storage Gateway provides ongoing hybrid access so on-premises applications can use cloud storage; it is not a migration and sync tool."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "Application servers in a private subnet of a VPC must download operating system patches from the internet. The servers must not be reachable by connections that start from the internet. What should the company add?",
+      "options": [
+        "An internet gateway with a route from the private subnet and public IP addresses on the servers",
+        "A NAT gateway in a public subnet, with a route to it from the private subnet",
+        "A virtual private gateway attached to the VPC",
+        "A gateway VPC endpoint for Amazon S3"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The traffic only needs to be started from the inside going out.",
+      "explanation": "A NAT gateway in a public subnet lets instances in private subnets start outbound connections to the internet while blocking connections started from the internet. Routing the private subnet directly to an internet gateway with public IPs would make the servers publicly reachable, which breaks the requirement."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An online retailer receives customer reviews in many languages. It wants to convert every review into English and then automatically detect whether each review is positive, negative, or neutral. Which TWO AWS services should it use? (Choose two.)",
+      "options": [
+        "Amazon Polly",
+        "Amazon Comprehend",
+        "Amazon Rekognition",
+        "Amazon Translate",
+        "Amazon Textract"
+      ],
+      "answer": [
+        1,
+        3
+      ],
+      "hint": "One step changes the language of text; the other understands the meaning of text.",
+      "explanation": "Amazon Translate performs neural machine translation of text, and Amazon Comprehend uses natural language processing to detect sentiment, entities, and key phrases. Amazon Polly does the opposite of reading text for meaning: it turns text into lifelike speech."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company encrypts data in Amazon S3 and Amazon EBS with AWS KMS. Its compliance team requires that the company can write the key policy itself, disable a key on demand, and turn automatic rotation on or off. Which type of KMS key meets these requirements?",
+      "options": [
+        "An AWS owned key",
+        "An AWS managed key",
+        "A key stored in AWS Secrets Manager",
+        "A customer managed key"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Which key type gives the customer full control over its lifecycle and permissions?",
+      "explanation": "Customer managed keys are created and controlled by the customer, who manages the key policy, can enable or disable the key, and configures automatic rotation. AWS managed keys are created on your behalf by an AWS service; you can see and audit them, but you cannot change their key policy, disable them, or manage their rotation."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A team defines its infrastructure and its operational runbooks as code, deploys in frequent, small, reversible changes, and holds a review after every incident to learn and improve its procedures. Which pillar of the AWS Well-Architected Framework do these practices mainly support?",
+      "options": [
+        "Reliability",
+        "Operational Excellence",
+        "Performance Efficiency",
+        "Security"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The focus is on how the team runs and improves its operations, not on recovering from component failures.",
+      "explanation": "Performing operations as code, making frequent small reversible changes, and learning from all operational failures are design principles of the Operational Excellence pillar. Reliability focuses on a workload recovering from failure and meeting demand, for example automatic recovery and horizontal scaling."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A ticketing company used to buy servers for its busiest concert night of the year, leaving most of them idle the rest of the time. On AWS it now adds and removes capacity to match actual demand. Which advantage of cloud computing does this best describe?",
+      "options": [
+        "Stop guessing capacity",
+        "Benefit from massive economies of scale",
+        "Go global in minutes",
+        "Stop spending money running and maintaining data centers"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "The problem described was predicting how much capacity they would need ahead of time.",
+      "explanation": "'Stop guessing capacity' means you no longer have to forecast and buy for peak demand; you scale up and down as needed and avoid idle or insufficient capacity. Economies of scale refers to AWS's lower prices from aggregating usage across many customers, not to matching capacity to your own demand."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company has decided to buy 3-year Reserved Instances for a steady workload to get a large discount. However, it expects to move to a newer instance family and possibly a different operating system during the term. Which Reserved Instance option should it choose?",
+      "options": [
+        "Standard Reserved Instances",
+        "Convertible Reserved Instances",
+        "Scheduled Reserved Instances",
+        "Zonal Standard Reserved Instances with capacity reservation"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "One RI class trades a slightly smaller discount for the ability to exchange it for different attributes.",
+      "explanation": "Convertible Reserved Instances can be exchanged for RIs with a different instance family, operating system, or tenancy, as long as the new RIs are of equal or greater value. Standard RIs give a bigger discount but cannot be exchanged for a different instance family; they only allow limited modifications such as AZ or size within the same family."
+    }
+  ]
+}
