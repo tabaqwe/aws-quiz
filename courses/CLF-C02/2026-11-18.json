@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-18",
+  "title": "Daily CLF-C02 quiz — 2026-11-18",
+  "questions": [
+    {
+      "domain": "Security & Compliance",
+      "q": "A company acquires a startup that has its own AWS account. For the next few months, administrators in the parent company's account must manage EC2 instances and RDS databases in the startup's account. The security team does not want any IAM users or long-term access keys created for them in the startup's account. What should the company do?",
+      "options": [
+        "Add a resource-based policy to every EC2 instance and RDS database that grants access to the parent account",
+        "Create an IAM role in the startup's account with a trust policy for the parent account, and have the administrators assume it to get temporary credentials from AWS STS",
+        "Share the startup account's root user credentials with the administrators and require MFA",
+        "Enable consolidated billing so the parent account automatically gets administrative access to the startup's account"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Look for the option that issues temporary credentials and works the same way for every service, whether or not that service supports resource policies.",
+      "explanation": "Cross-account access is done with an IAM role in the target account that trusts the other account; users assume it through AWS STS and get temporary credentials, with no new IAM users. Resource-based policies are not the answer: many services, including EC2 and RDS, don't support them, and managing a policy on every resource doesn't scale.",
+      "homework": true,
+      "reviewOf": "2026-11-10#4"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An HR system's employee-onboarding process must create accounts in several systems, then wait up to a week for a manager to approve equipment, branch to different steps depending on the employee's department, retry calls that fail, and show HR a visual history of where each new hire's onboarding stands. Which AWS service should coordinate this process?",
+      "options": [
+        "AWS Step Functions",
+        "Amazon SNS",
+        "Amazon SQS",
+        "Amazon EventBridge"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "You need something that remembers the state of each long-running process and decides the next step, not just something that delivers a message.",
+      "explanation": "AWS Step Functions orchestrates multi-step workflows as state machines, with branching, retries, error handling, waits for human approval (callback tasks), executions that can last up to a year, and a visual execution history. Amazon SNS only fans out notifications to subscribers; it keeps no workflow state and has no branching, retries per step, or approval waits.",
+      "homework": true,
+      "reviewOf": "2026-11-10#5"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company is growing from 6 VPCs to more than 50 across many AWS accounts in one Region, and every VPC must also reach its data centers over existing Site-to-Site VPN connections. Because VPC peering is not transitive, the number of peering connections and route table entries is becoming unmanageable. Which service should it use to connect everything through a central hub?",
+      "options": [
+        "AWS Direct Connect",
+        "AWS PrivateLink",
+        "AWS Transit Gateway",
+        "Additional VPC peering connections"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Picture a hub-and-spoke router that VPCs and VPNs attach to, rather than a physical line into AWS.",
+      "explanation": "AWS Transit Gateway acts as a regional cloud router: each VPC and VPN attaches once to the hub and traffic routes between them transitively, replacing a mesh of peering connections. AWS Direct Connect is a dedicated private network link from on premises to AWS; it does not route traffic between VPCs or simplify a peering mesh.",
+      "homework": true,
+      "reviewOf": "2026-11-10#6"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company has 30 member accounts in AWS Organizations. It must guarantee that no one in any member account, including each account's root user, can stop AWS CloudTrail logging or launch resources outside the EU Regions, even if they have AdministratorAccess. What should it use?",
+      "options": [
+        "An IAM policy attached to every user and role in each account",
+        "AWS Config rules that flag CloudTrail changes and non-EU resources",
+        "IAM permissions boundaries on every IAM user",
+        "Service control policies (SCPs) attached to the organization's OUs"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The control has to apply even to identities that already have full admin rights, and even to the root user of each member account.",
+      "explanation": "SCPs set the maximum permissions available in member accounts of AWS Organizations, so a deny in an SCP applies to every IAM user, role and the root user of those accounts, whatever their own policies allow. AWS Config rules only detect and report (or remediate after the fact); they don't prevent the action, and IAM policies can't restrict the root user."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company's 2,000 employees already sign in to Microsoft Entra ID. They need single sign-on to the AWS Management Console across 25 AWS accounts, with access set centrally by job function, and without creating IAM users in every account. Which AWS service should the company use?",
+      "options": [
+        "AWS IAM Identity Center",
+        "Amazon Cognito",
+        "AWS Directory Service Simple AD",
+        "IAM users with access keys in each account"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Separate workforce identities (your employees) from customer identities (users of your own app).",
+      "explanation": "AWS IAM Identity Center provides workforce single sign-on to multiple AWS accounts and applications, can connect to an external identity provider such as Microsoft Entra ID, and assigns access centrally through permission sets. Amazon Cognito is for adding sign-up and sign-in to customer-facing web and mobile apps, not for employee access to AWS accounts."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An online multiplayer game uses UDP and runs on game servers in three AWS Regions. Players worldwide report lag and jitter over the public internet. The company wants two static IP addresses that players connect to, traffic carried over the AWS global network to the nearest healthy Region, and fast failover if a Region becomes unhealthy. Which service fits best?",
+      "options": [
+        "Amazon CloudFront",
+        "AWS Global Accelerator",
+        "Amazon Route 53 simple routing",
+        "Elastic Load Balancing Application Load Balancer"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The traffic is not cacheable web content, and the requirement mentions fixed anycast IP addresses.",
+      "explanation": "AWS Global Accelerator gives you static anycast IP addresses, brings TCP and UDP traffic onto the AWS global network at the nearest edge location, and routes it to the closest healthy regional endpoint with fast failover. Amazon CloudFront is a CDN that caches and delivers HTTP/HTTPS content; it doesn't proxy arbitrary UDP game traffic."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "Which TWO statements about AWS Availability Zones are correct? (Choose two.)",
+      "options": [
+        "Each Availability Zone is located in a different AWS Region",
+        "An Availability Zone consists of one or more discrete data centers with redundant power, networking and connectivity",
+        "An Availability Zone is the same as an edge location used by Amazon CloudFront",
+        "Data stored in one Availability Zone is automatically replicated to every other AWS Region",
+        "Availability Zones within a Region are connected to each other with high-bandwidth, low-latency networking"
+      ],
+      "answer": [
+        1,
+        4
+      ],
+      "hint": "Think about what makes running across several AZs in one Region a good way to survive a single data center failure.",
+      "explanation": "A Region contains multiple, physically separated Availability Zones; each AZ is one or more data centers with redundant power and networking, and AZs in a Region are linked with high-bandwidth, low-latency connections so you can run synchronous multi-AZ deployments. Edge locations are a separate part of the global infrastructure used by CloudFront and Route 53, and AWS never copies your data to other Regions unless you configure it."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's data center lease ends in 3 months. It must move 200 virtual machines to AWS as quickly as possible with no code or architecture changes, and plans to optimize the applications only after they are running in the cloud. Which migration strategy should it use?",
+      "options": [
+        "Refactor / re-architect",
+        "Repurchase",
+        "Rehost (lift and shift), for example with AWS Application Migration Service",
+        "Retain"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "With a hard deadline and no time for changes, pick the strategy that moves servers exactly as they are.",
+      "explanation": "Rehost moves applications to AWS without changes and is the fastest way to migrate many servers; AWS Application Migration Service automates it, and optimization can follow later. Refactoring means redesigning the application, often for cloud-native services, which takes far more time than the 3-month deadline allows."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company is estimating the data transfer charges for a new application on Amazon EC2. In general, which type of data transfer does AWS NOT charge for?",
+      "options": [
+        "Data transferred out from EC2 to the internet",
+        "Data transferred between EC2 instances in different AWS Regions",
+        "Data transferred between EC2 instances in different Availability Zones",
+        "Data transferred in to AWS from the internet"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "AWS wants it to be easy to bring data into the cloud.",
+      "explanation": "Inbound data transfer from the internet into AWS is generally free, while data transferred out to the internet, between Regions, and between Availability Zones is charged per GB. Cross-AZ traffic is a common surprise: it carries a charge in each direction even though it stays inside one Region."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company spends a steady amount on compute every hour and will commit to that spend for 3 years. Over that time it expects to move workloads between EC2 instance families and Regions, and to shift some services to AWS Fargate and AWS Lambda. Which pricing option gives a discount while keeping that flexibility?",
+      "options": [
+        "EC2 Instance Savings Plans",
+        "Compute Savings Plans",
+        "Standard Reserved Instances",
+        "Spot Instances"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "One option is tied to an instance family in one Region; look for the one that follows your spend wherever the compute runs.",
+      "explanation": "Compute Savings Plans apply to EC2 usage in any instance family, size, OS and Region, and also to AWS Fargate and AWS Lambda, in exchange for a 1- or 3-year commitment to a dollar-per-hour spend. EC2 Instance Savings Plans give a bigger discount but only for one instance family in one Region, and don't cover Fargate or Lambda."
+    }
+  ]
+}
