@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-19",
+  "title": "Daily CLF-C02 quiz — 2026-11-19",
+  "questions": [
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An IT operations team models its environment as microservices, the servers they run on, and the network switches those servers connect to. When a switch fails, the team must instantly find every service that depends on it, directly or through several layers of other services. Which AWS database is the best fit?",
+      "options": [
+        "Amazon Neptune",
+        "Amazon Redshift",
+        "Amazon DynamoDB",
+        "Amazon Aurora MySQL"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "The hard part is following chains of connections many levels deep, not crunching large volumes of historical data.",
+      "explanation": "Amazon Neptune is a managed graph database built to traverse highly connected data, such as dependency chains, with low latency. Amazon Redshift is a data warehouse for large analytical (OLAP) queries over historical data. It isn't designed for real-time multi-hop relationship lookups.",
+      "homework": true,
+      "reviewOf": "2026-11-10#7"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company's licensing agreement for a commercial application is based on the number of physical sockets in the server. The agreement also requires the software to stay on the same physical server for at least 90 days. The company wants to run this application on Amazon EC2 and remain compliant. Which option should it choose?",
+      "options": [
+        "Spot Instances",
+        "Dedicated Instances",
+        "Dedicated Hosts",
+        "On-Demand Capacity Reservations"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "You need to see the physical server's sockets and keep instances pinned to that same server.",
+      "explanation": "Dedicated Hosts give you a whole physical server, show its sockets and cores, and support host affinity so instances keep running on the same host, which is what BYOL socket-based licenses need. Spot Instances are a pricing option for spare capacity that can be interrupted at any time and give no visibility into or control over the physical hardware.",
+      "homework": true,
+      "reviewOf": "2026-11-10#8"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company has 30 linked accounts. Last month, data transfer costs in one account quietly tripled and nobody noticed until the invoice arrived. Finance wants a tool that uses machine learning to learn each service's normal spending pattern, flags unusual increases, and emails a summary that points to the account, service and Region behind each spike. Which tool should it use?",
+      "options": [
+        "AWS Trusted Advisor",
+        "AWS Budgets",
+        "AWS Cost and Usage Report",
+        "AWS Cost Anomaly Detection"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Look for the tool that learns what normal looks like instead of running a fixed list of checks or comparing to a threshold you set.",
+      "explanation": "AWS Cost Anomaly Detection uses machine learning to spot unusual spend and sends alerts with root-cause details such as account, service and Region. Trusted Advisor runs a fixed set of best-practice checks (for example idle resources) and doesn't monitor your spending trends for anomalies.",
+      "homework": true,
+      "reviewOf": "2026-11-10#9"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A security team wants to identify which of its Amazon S3 buckets, IAM roles and KMS keys can be accessed by principals outside its AWS organization, so it can review any unintended external sharing. Which service should it use?",
+      "options": [
+        "Amazon GuardDuty",
+        "AWS IAM Access Analyzer",
+        "Amazon Macie",
+        "AWS Artifact"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The question is about who the resource policies let in, not about threats or sensitive data.",
+      "explanation": "IAM Access Analyzer analyzes resource-based policies and reports resources that are shared with external principals outside your zone of trust (account or organization). Amazon Macie finds sensitive data such as PII in S3, but it doesn't analyze which outside principals can reach your roles or keys."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company wants to run its own penetration test against its Amazon EC2 instances and Amazon RDS databases before a product launch. What is AWS's policy?",
+      "options": [
+        "The company must submit a request and get written approval from AWS before testing any service",
+        "Only AWS can test AWS-hosted resources, so the company must open a case with AWS Support",
+        "The company can test approved services such as EC2 and RDS without prior approval, but must not perform prohibited activities such as denial-of-service attacks",
+        "Penetration testing is allowed only for accounts with the Enterprise Support plan"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "AWS relaxed its rules years ago for a list of common services, but some activities are still off limits.",
+      "explanation": "AWS customers can run security assessments and penetration tests against a list of permitted services, including EC2 and RDS, without asking first. Activities such as DoS/DDoS, flooding and DNS zone walking remain prohibited. Prior approval is no longer required for these services, and no specific support plan is needed."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A bank's regulator requires that encryption keys are stored in dedicated, single-tenant hardware security modules that only the bank controls, and that AWS has no access to the key material. Which service meets this requirement?",
+      "options": [
+        "AWS CloudHSM",
+        "AWS KMS with AWS managed keys",
+        "AWS Secrets Manager",
+        "AWS Certificate Manager"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Think about who controls the hardware and whether it is shared with other customers.",
+      "explanation": "AWS CloudHSM provides dedicated, single-tenant HSMs in your VPC where you exclusively manage the keys and users. AWS KMS also protects keys in HSMs, but those are multi-tenant and managed by AWS, and AWS managed keys are created and controlled by AWS on your behalf."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A mobile game sends millions of player events per minute. Three separate applications (a real-time leaderboard, a fraud detector and an archiving job) must each read the same ordered events within seconds, and the data must be replayable for up to 7 days. Which service should collect the events?",
+      "options": [
+        "Amazon SQS standard queue",
+        "Amazon SNS",
+        "Amazon EventBridge",
+        "Amazon Kinesis Data Streams"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Several consumers need to read the same records independently, in order, and be able to go back in time.",
+      "explanation": "Kinesis Data Streams ingests high-volume streaming data, keeps records ordered per shard, lets multiple consumers read the same data independently, and can retain it for replay (24 hours by default, extendable up to 365 days). With an SQS queue, each message is processed and then deleted, so several applications can't each read and replay the same stream."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company runs identical copies of its web application in us-east-1, eu-central-1 and ap-southeast-1. It wants Amazon Route 53 to send each user to the Region that gives that user the fastest response time. Which routing policy should it use?",
+      "options": [
+        "Weighted routing",
+        "Latency-based routing",
+        "Failover routing",
+        "Simple routing"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The goal is speed for each user, not splitting traffic by percentage or keeping a standby.",
+      "explanation": "Latency-based routing answers DNS queries with the Region that has the lowest measured network latency for the user. Weighted routing splits traffic by percentages you assign, regardless of where the user is or which Region is fastest."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "Which TWO are design principles of the Cost Optimization pillar of the AWS Well-Architected Framework? (Choose two.)",
+      "options": [
+        "Adopt a consumption model",
+        "Perform operations as code",
+        "Analyze and attribute expenditure",
+        "Scale horizontally to increase aggregate workload availability",
+        "Go global in minutes"
+      ],
+      "answer": [
+        0,
+        2
+      ],
+      "hint": "Look for the principles about paying only for what you use and knowing who is spending what.",
+      "explanation": "Cost Optimization design principles include implementing cloud financial management, adopting a consumption model, measuring overall efficiency, stopping spending on undifferentiated heavy lifting, and analyzing and attributing expenditure. Performing operations as code is an Operational Excellence principle, and scaling horizontally is a Reliability principle."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "An online retailer's Auto Scaling group adds EC2 instances automatically when a flash sale drives traffic up, then removes them when traffic drops so the company stops paying for idle capacity. Which cloud benefit does this best describe?",
+      "options": [
+        "High availability",
+        "Fault tolerance",
+        "Elasticity",
+        "Economies of scale"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Focus on capacity that grows and shrinks to match demand.",
+      "explanation": "Elasticity is the ability to acquire resources when demand rises and release them when it falls, so you pay only for what you need. High availability is about keeping a workload running despite failures (for example across multiple AZs), not about matching capacity to demand."
+    }
+  ]
+}
