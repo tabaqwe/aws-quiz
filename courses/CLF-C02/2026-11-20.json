@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-20",
+  "title": "Daily CLF-C02 quiz — 2026-11-20",
+  "questions": [
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's on-call engineers keep fighting the same outages: there are no runbooks for recurring events, root causes are never tracked to closure, and nobody forecasts when databases will run out of capacity. The CTO wants to strengthen these capabilities using the AWS Cloud Adoption Framework (AWS CAF). Which perspective should the team focus on?",
+      "options": [
+        "Governance",
+        "Operations",
+        "People",
+        "Platform"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Think about which perspective is about running cloud services day to day, not about steering programs, risk and budgets.",
+      "explanation": "The Operations perspective covers event and incident management, problem management, observability and capacity planning so services run at the levels the business needs. Governance is about orchestrating the cloud program: portfolio and program management, risk, cloud financial management and data governance, not running workloads.",
+      "homework": true,
+      "reviewOf": "2026-11-10#1"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "An IAM user has the AWS managed AdministratorAccess policy attached directly. She is also a member of an IAM group whose policy explicitly denies lambda:DeleteFunction. She signs in to the console with MFA and tries to delete a Lambda function. What happens?",
+      "options": [
+        "The deletion succeeds, because AdministratorAccess is an AWS managed policy and takes precedence over customer policies",
+        "The deletion succeeds, because signing in with MFA overrides deny statements",
+        "The deletion is denied only if she signed in without MFA",
+        "The deletion is denied, because an explicit deny in any applicable policy overrides every allow"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "MFA only matters if a policy has a condition that checks for it. Neither policy here does.",
+      "explanation": "IAM policy evaluation always lets an explicit deny win over any allow, no matter which policy the allow comes from or how the user authenticated. MFA changes the result only when a policy uses a condition such as aws:MultiFactorAuthPresent, and the deny here has no such condition.",
+      "homework": true,
+      "reviewOf": "2026-11-10#2"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company must make sure that no security group in its accounts allows inbound SSH (port 22) from 0.0.0.0/0. It wants every change evaluated as soon as it happens, a history showing how each security group was configured over time, and offending rules removed automatically. Which AWS service should it use?",
+      "options": [
+        "AWS Trusted Advisor",
+        "Amazon GuardDuty",
+        "AWS Config",
+        "AWS CloudTrail"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "You need continuous rule evaluation plus a configuration timeline and automatic remediation, not a periodic best-practice checklist.",
+      "explanation": "AWS Config records resource configuration history, evaluates changes against rules (such as the managed restricted-ssh rule) and can remediate automatically with Systems Manager Automation. Trusted Advisor can flag security groups with unrestricted access, but it does not keep configuration history or automatically fix the rules.",
+      "homework": true,
+      "reviewOf": "2026-11-10#3"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A law firm must keep scanned case files for 10 years to meet regulations. The files will almost never be read, and when they are, waiting up to 48 hours for retrieval is acceptable. The firm wants the lowest possible storage cost. Which Amazon S3 storage class should it use?",
+      "options": [
+        "S3 Glacier Instant Retrieval",
+        "S3 Standard-Infrequent Access",
+        "S3 One Zone-Infrequent Access",
+        "S3 Glacier Deep Archive"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Retrieval measured in hours is fine here, so trade speed for the cheapest price per GB.",
+      "explanation": "S3 Glacier Deep Archive is the lowest-cost S3 storage class, designed for long-term retention of rarely accessed data with retrieval in 12 to 48 hours. S3 Glacier Instant Retrieval returns data in milliseconds, but it costs more to store, so you would be paying for speed the firm does not need."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company runs a large in-memory database and real-time analytics engine on Amazon EC2. The workload needs a very high ratio of RAM to vCPU, and memory is the bottleneck. Which EC2 instance family category is the best fit?",
+      "options": [
+        "Memory optimized (for example, R family)",
+        "Compute optimized (for example, C family)",
+        "Storage optimized (for example, I family)",
+        "Accelerated computing (for example, P family)"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Match the instance category to the resource that is running out.",
+      "explanation": "Memory optimized instances such as the R family deliver fast performance for workloads that process large data sets in memory, like in-memory databases. Compute optimized instances give more CPU per GB of memory, suited to compute-bound jobs such as batch processing or gaming servers."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A telecom company's data scientists want to build, train and deploy a custom churn-prediction model using their own customer data and algorithms such as XGBoost. They want managed notebooks, training infrastructure and hosted endpoints. Which AWS service fits best?",
+      "options": [
+        "Amazon Comprehend",
+        "Amazon Rekognition",
+        "Amazon SageMaker AI",
+        "Amazon Polly"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The team is writing its own model, not calling a pre-trained API for a specific task.",
+      "explanation": "Amazon SageMaker AI is the managed service for building, training and deploying custom machine learning models. Amazon Comprehend is a pre-trained natural language processing service for tasks like sentiment and entity extraction, so it cannot train a custom tabular churn model with your own algorithm."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "Which TWO statements correctly describe Amazon VPC security groups? (Choose two.)",
+      "options": [
+        "They are applied at the subnet level and affect every instance in the subnet",
+        "They are stateful, so return traffic for an allowed request is automatically allowed",
+        "Their rules are evaluated in order, starting with the lowest numbered rule",
+        "They support both allow and deny rules",
+        "They support allow rules only"
+      ],
+      "answer": [
+        1,
+        4
+      ],
+      "hint": "Two of the distractors describe the other VPC firewall feature, network ACLs.",
+      "explanation": "Security groups act at the instance (network interface) level, are stateful, and only support allow rules, so anything not allowed is denied. Network ACLs are the ones that work at the subnet level, are stateless, support deny rules and evaluate numbered rules in order."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company runs a self-managed, on-premises IT help desk ticketing application that is expensive to maintain. As part of its migration to the cloud, it decides to stop running that application and move its staff to a commercial software-as-a-service (SaaS) help desk product instead. Which migration strategy is this?",
+      "options": [
+        "Replatform",
+        "Repurchase",
+        "Rehost",
+        "Retain"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The company is buying a different product, not moving or tweaking its existing one.",
+      "explanation": "Repurchase (sometimes called drop and shop) means replacing an existing application with a different product, typically SaaS. Replatform keeps the same application but makes a few cloud optimizations, such as moving its database to a managed service, during the move."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company wants each department to see its own share of the monthly AWS bill in AWS Cost Explorer and in the AWS Cost and Usage Report. All departments share a single AWS account. What should the company do?",
+      "options": [
+        "Enable consolidated billing in AWS Organizations",
+        "Create an AWS Budgets budget for the account",
+        "Tag resources with a Department tag and activate it as a cost allocation tag in the Billing and Cost Management console",
+        "Estimate each department's costs with AWS Pricing Calculator"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Costs need a label that the billing tools can group by, inside one account.",
+      "explanation": "User-defined tags only appear in Cost Explorer and the Cost and Usage Report after they are activated as cost allocation tags, which lets costs be grouped by department. Consolidated billing combines the bills of multiple accounts, so it does not split costs within a single shared account."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company suspects many of its EC2 instances, EBS volumes and Lambda functions are over-provisioned. It wants recommendations, based on actual utilization metrics, for better-sized instance types, EBS volume configurations and Lambda memory settings. Which AWS service provides this?",
+      "options": [
+        "AWS Compute Optimizer",
+        "AWS Budgets",
+        "AWS Pricing Calculator",
+        "AWS Cost and Usage Report"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Look for the service that analyzes historical utilization and suggests right-sized resource configurations.",
+      "explanation": "AWS Compute Optimizer uses machine learning on CloudWatch utilization metrics to recommend right-sized EC2 instances, EBS volumes, Lambda memory and more. AWS Budgets only alerts you when costs or usage cross thresholds you set. It does not analyze utilization or suggest configurations."
+    }
+  ]
+}
