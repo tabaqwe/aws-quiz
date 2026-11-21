@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-21",
+  "title": "Daily CLF-C02 quiz — 2026-11-21",
+  "questions": [
+    {
+      "domain": "Security & Compliance",
+      "q": "A company runs its CI/CD pipeline in a dedicated 'tools' AWS account. The pipeline must deploy AWS CloudFormation stacks into the separate production account. The security team forbids long-lived access keys and does not want to edit a policy on every resource in production. What is the recommended way to give the pipeline access?",
+      "options": [
+        "Create an IAM user in the production account and store its access keys as pipeline secrets",
+        "Add a bucket policy to every S3 bucket in production that grants access to the tools account",
+        "Create an IAM role in the production account that trusts the tools account, and have the pipeline assume it through AWS STS",
+        "Share the production account's root user credentials with the pipeline, protected by MFA"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Think about how one account's identity gets temporary credentials in another account, and how many services the pipeline must touch.",
+      "explanation": "A cross-account IAM role with a trust policy for the tools account lets the pipeline call sts:AssumeRole and receive temporary credentials scoped by the role's permissions, covering CloudFormation and every service it deploys. Resource-based policies such as bucket policies only cover that one resource type and must be repeated per resource, and many services CloudFormation touches don't support them at all.",
+      "homework": true,
+      "reviewOf": "2026-11-10#4"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An insurer's claims process must extract data from each claim, run a fraud check, and then either pay automatically or send the claim to a human investigator and pause until the investigator records a decision. Calls to the payment API must be retried with backoff, and auditors want to see, step by step, which path every individual claim took. Which service should coordinate this process?",
+      "options": [
+        "Amazon SNS",
+        "Amazon SQS",
+        "Amazon EventBridge",
+        "AWS Step Functions"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Notifying or queuing is not the same as remembering where each claim is in a multi-step, branching process.",
+      "explanation": "AWS Step Functions is a workflow orchestrator: it keeps state for each execution, supports Choice branches, built-in Retry/Catch with backoff, wait-for-callback for human approval, and a visual execution history. Amazon SNS only fans out messages to subscribers; it has no notion of steps, branches, waiting for a decision, or per-claim execution history.",
+      "homework": true,
+      "reviewOf": "2026-11-10#5"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A retailer has 25 VPCs in one Region across several AWS accounts, and each VPC has its own Site-to-Site VPN connections to the same branch offices. The network team wants a single regional hub that all VPCs and VPN connections attach to, with route tables that keep development VPCs isolated from production VPCs. Which service should it use?",
+      "options": [
+        "AWS Transit Gateway",
+        "AWS Direct Connect",
+        "VPC peering",
+        "AWS PrivateLink"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "One option is a private physical link to on premises; the problem here is how many networks have to be interconnected and routed.",
+      "explanation": "AWS Transit Gateway is a regional hub-and-spoke router: VPCs (including from other accounts via AWS RAM) and VPN or Direct Connect connections attach once, and its route tables can segment dev from prod. AWS Direct Connect is only a dedicated connection between on premises and AWS; it does not interconnect or route between many VPCs.",
+      "homework": true,
+      "reviewOf": "2026-11-10#6"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company builds an augmented-reality app for smartphones on a telecom carrier's 5G network. Rendering must run on AWS compute with single-digit millisecond latency, and traffic from the devices should reach the application servers without leaving the carrier's network. Which AWS infrastructure offering should it use?",
+      "options": [
+        "AWS Local Zones",
+        "AWS Wavelength",
+        "AWS Outposts",
+        "Amazon CloudFront edge locations"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The key detail is where the compute physically sits: inside the mobile carrier's network.",
+      "explanation": "AWS Wavelength Zones embed AWS compute and storage inside telecom providers' 5G networks, so mobile traffic reaches the application without traversing the internet. Local Zones put AWS infrastructure near large metro areas, but mobile traffic still has to leave the carrier network to reach them."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "Amazon GuardDuty raised a finding that an IAM role made unusual API calls from an unfamiliar IP address. The security team now wants to investigate: see the role's normal behavior over time, which other resources and IP addresses were involved, and visualizations that help find the root cause, without building its own log analytics. Which service should it use?",
+      "options": [
+        "Amazon Inspector",
+        "AWS Config",
+        "Amazon Macie",
+        "Amazon Detective"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "GuardDuty detects; which service is built for the follow-up investigation?",
+      "explanation": "Amazon Detective automatically builds a behavior graph from sources such as CloudTrail, VPC Flow Logs and GuardDuty findings, so analysts can investigate the scope and root cause of suspicious activity. Amazon Inspector scans EC2 instances, container images and Lambda functions for software vulnerabilities and unintended network exposure; it doesn't investigate API activity."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company serves its website through an Application Load Balancer and Amazon CloudFront. It wants public SSL/TLS certificates for its domain that it can attach to these services, without paying for them separately and without tracking expiration dates or renewing them by hand. Which service meets these requirements?",
+      "options": [
+        "AWS Certificate Manager (ACM)",
+        "AWS Key Management Service (AWS KMS)",
+        "AWS Secrets Manager",
+        "AWS CloudHSM"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Look for the service that issues and renews certificates, not one that stores keys or passwords.",
+      "explanation": "ACM provisions public SSL/TLS certificates at no extra cost for use with integrated services such as Elastic Load Balancing and CloudFront, and renews them automatically. AWS KMS creates and manages encryption keys for data encryption; it does not issue TLS certificates."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "Which TWO are design principles of the Security pillar of the AWS Well-Architected Framework? (Choose two.)",
+      "options": [
+        "Rely on a strong network perimeter firewall so internal resources can trust each other",
+        "Keep people away from data",
+        "Use long-term access keys for automation so credentials never expire unexpectedly",
+        "Grant broad permissions first and remove them once usage is understood",
+        "Apply security at all layers"
+      ],
+      "answer": [
+        1,
+        4
+      ],
+      "hint": "Think defense in depth and reducing direct human handling of data.",
+      "explanation": "The Security pillar's principles include implementing a strong identity foundation, enabling traceability, applying security at all layers, automating security best practices, protecting data in transit and at rest, keeping people away from data, and preparing for security events. Relying only on a perimeter contradicts 'apply security at all layers', and starting with broad permissions contradicts least privilege."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company runs hundreds of workloads on VMware vSphere on premises. It wants to move them to a VMware environment running on AWS infrastructure as quickly as possible, keeping the same VMware tools and operating procedures, without converting the virtual machines, buying new hardware, or changing the applications. Which migration strategy is this?",
+      "options": [
+        "Rehost",
+        "Replatform",
+        "Relocate",
+        "Repurchase"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The VMs move at the hypervisor level and stay VMware VMs; nothing is converted to a different instance format.",
+      "explanation": "Relocate moves infrastructure to the cloud at the hypervisor level (for example, VMware workloads to a VMware environment on AWS) without new hardware, application changes or new operations. Rehost (lift and shift) converts each server into Amazon EC2 instances, for example with AWS Application Migration Service, so the VMs no longer run on VMware."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company moves a nightly image-resizing script from an always-on server to AWS Lambda. Finance asks how the Lambda function will be billed. Which statement is correct?",
+      "options": [
+        "A fixed hourly rate for each function that is deployed, whether or not it runs",
+        "The number of requests plus the execution duration, priced according to the memory allocated to the function",
+        "The number of vCPUs the company reserves for the function each month",
+        "Only the amount of data the function reads from Amazon S3"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Serverless pricing follows actual use, not provisioned servers.",
+      "explanation": "Lambda charges per request and per unit of compute duration (GB-seconds), which depends on the memory you allocate, so there is no charge when the function isn't running. A fixed hourly charge for deployed capacity describes On-Demand EC2 instances, not Lambda."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A media company stores 500 TB of user uploads in Amazon S3. Some objects become popular again months after upload, and access patterns are unpredictable. The company wants to lower storage costs automatically without analyzing access itself, without lifecycle rules, and without paying retrieval fees when an object is read. Which option should it choose?",
+      "options": [
+        "S3 Glacier Flexible Retrieval",
+        "S3 One Zone-Infrequent Access",
+        "S3 Intelligent-Tiering",
+        "S3 Standard-Infrequent Access"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Unknown or changing access patterns, and no retrieval charges.",
+      "explanation": "S3 Intelligent-Tiering monitors access and moves each object between access tiers automatically for a small per-object monitoring fee, with no retrieval fees, so costs drop without lifecycle rules. S3 Glacier Flexible Retrieval is cheaper to store but charges for retrieval and takes minutes to hours to restore, which doesn't suit unpredictable reads."
+    }
+  ]
+}
