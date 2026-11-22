@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-22",
+  "title": "Daily CLF-C02 quiz — 2026-11-22",
+  "questions": [
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A social media app wants to show each user \"people you may know\" suggestions by following friend-of-a-friend connections, shared groups and shared check-ins several hops deep, and return results in milliseconds as users scroll. Which AWS database is purpose-built for this?",
+      "options": [
+        "Amazon Redshift",
+        "Amazon Neptune",
+        "Amazon RDS for MySQL",
+        "Amazon Timestream"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The query walks connections between entities rather than summing up columns across billions of rows.",
+      "explanation": "Amazon Neptune is a managed graph database designed for fast, low-latency traversal of highly connected data such as social networks and recommendation graphs. Amazon Redshift is a columnar data warehouse built for large aggregate analytics and reporting, not for interactive multi-hop relationship queries.",
+      "homework": true,
+      "reviewOf": "2026-11-10#7"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company runs a database product licensed per physical core. The vendor's terms say the software must stay on the same physical server for at least 90 days, and the company must be able to show auditors exactly which server and how many cores it used. Which Amazon EC2 purchasing option meets these requirements?",
+      "options": [
+        "Spot Instances",
+        "Dedicated Instances",
+        "Dedicated Hosts",
+        "On-Demand Instances on shared tenancy"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "You need visibility into the physical server itself and the ability to keep an instance pinned to it.",
+      "explanation": "Dedicated Hosts give you a whole physical server with visibility into its sockets and cores and support host affinity, which is what socket- or core-based bring-your-own-license terms require. Spot Instances only lower price for interruptible capacity; they can be reclaimed at any time and give no control over or visibility into the physical host, and Dedicated Instances are single-tenant but also hide the host details.",
+      "homework": true,
+      "reviewOf": "2026-11-10#8"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company's AWS spending varies a lot from week to week, so fixed budget thresholds keep firing false alarms. It wants a service that uses machine learning to learn the normal spend pattern for each service and linked account, sends an alert through Amazon SNS when spend deviates unexpectedly, and shows the likely root cause. Which service should it use?",
+      "options": [
+        "AWS Cost Anomaly Detection",
+        "AWS Trusted Advisor",
+        "AWS Budgets",
+        "AWS Pricing Calculator"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "The key words are learned baselines and unexpected deviations, not best-practice checks or fixed limits.",
+      "explanation": "AWS Cost Anomaly Detection uses machine learning to model normal spending, alerts on anomalies, and identifies the root cause such as the service, account or Region. AWS Trusted Advisor runs best-practice checks (for example idle or underused resources) but does not monitor spend patterns for unexpected spikes, and AWS Budgets alerts only on thresholds you set.",
+      "homework": true,
+      "reviewOf": "2026-11-10#9"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "An Amazon S3 bucket holding production backups was deleted over the weekend. The security team must find out which IAM identity made the DeleteBucket call, from which IP address, and at what time. Which AWS service provides this information?",
+      "options": [
+        "Amazon CloudWatch metrics",
+        "AWS Config",
+        "Amazon Inspector",
+        "AWS CloudTrail"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "You need a record of who called which API, not a measurement or a resource snapshot.",
+      "explanation": "AWS CloudTrail records API activity in the account, including the identity, source IP address, time and request parameters of calls such as DeleteBucket. AWS Config tracks how resource configurations change and whether they comply with rules, but CloudTrail is the service that answers who made the call."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A small online shop runs its website on Amazon EC2 behind Amazon CloudFront. It has not subscribed to any extra protection services. Which AWS service already protects it against common network and transport layer DDoS attacks, such as SYN floods, at no additional cost?",
+      "options": [
+        "AWS Shield Standard",
+        "AWS Shield Advanced",
+        "AWS WAF",
+        "Amazon GuardDuty"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "One tier of this service is turned on automatically for every AWS customer.",
+      "explanation": "AWS Shield Standard is automatically enabled for all AWS customers at no extra charge and defends against the most common layer 3 and 4 DDoS attacks. AWS Shield Advanced is a paid subscription that adds enhanced detection, the Shield Response Team and DDoS cost protection."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company stores customer documents in Amazon S3. Under the AWS shared responsibility model, which TWO tasks are the company's responsibility? (Choose two.)",
+      "options": [
+        "Maintaining the storage hardware that holds the objects",
+        "Configuring bucket policies and Block Public Access to control who can read the objects",
+        "Patching the software that runs the Amazon S3 service",
+        "Choosing whether and how to encrypt the objects, for example with SSE-KMS",
+        "Securing the facilities where the S3 data centers are located"
+      ],
+      "answer": [
+        1,
+        3
+      ],
+      "hint": "AWS secures the service itself; think about what only the customer can decide about their own data.",
+      "explanation": "In S3 the customer controls security in the cloud: who can access the data (bucket policies, IAM, Block Public Access) and how the data is protected (encryption choices). AWS is responsible for security of the cloud, including the hardware, service software and physical facilities."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company wants its order system to recover automatically from component failures, scale out to meet demand instead of relying on one large server, and regularly test its recovery procedures. Which pillar of the AWS Well-Architected Framework focuses on these goals?",
+      "options": [
+        "Performance Efficiency",
+        "Operational Excellence",
+        "Reliability",
+        "Cost Optimization"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Which pillar is about a workload doing its intended function correctly and consistently, even when things break?",
+      "explanation": "The Reliability pillar covers a workload's ability to recover from failures and meet demand, with design principles such as automatically recovering from failure, testing recovery procedures and scaling horizontally. Performance Efficiency is about using computing resources efficiently and choosing the right resource types, not about recovering from failure."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "As a company moves to AWS, many employees fear their roles will disappear and teams lack cloud skills. Leadership wants a plan for training, cultural change, and updating the organization's structure and roles. Which AWS Cloud Adoption Framework (AWS CAF) perspective addresses this?",
+      "options": [
+        "Platform",
+        "Governance",
+        "Business",
+        "People"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "This perspective bridges technology and the business through the workforce.",
+      "explanation": "The People perspective of the AWS CAF covers culture, organizational structure, leadership and workforce transformation, including building cloud skills. The Governance perspective focuses on managing benefits, risks, costs and program oversight, not on training and culture."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company's single website domain serves its product catalog at /shop and its customer API at /api, each from a different group of Amazon EC2 instances. It wants one load balancer that sends requests to the right group based on the URL path. Which option should it use?",
+      "options": [
+        "Network Load Balancer",
+        "Application Load Balancer with path-based routing rules",
+        "Gateway Load Balancer",
+        "Amazon Route 53 weighted routing"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The decision is made by inspecting the HTTP request itself, at layer 7.",
+      "explanation": "An Application Load Balancer works at the HTTP/HTTPS layer and can route requests to different target groups based on the URL path or host. A Network Load Balancer works at layer 4 (TCP/UDP) and cannot inspect URL paths."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A team already runs its containerized applications on Kubernetes on premises and wants to keep using standard Kubernetes tools and manifests on AWS. It does not want to install, operate or scale the Kubernetes control plane itself. Which AWS service fits best?",
+      "options": [
+        "Amazon Elastic Container Service (Amazon ECS)",
+        "AWS Elastic Beanstalk",
+        "Amazon Elastic Container Registry (Amazon ECR)",
+        "Amazon Elastic Kubernetes Service (Amazon EKS)"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The requirement is specifically about compatibility with an open-source orchestrator.",
+      "explanation": "Amazon EKS is a managed Kubernetes service: AWS runs and scales the Kubernetes control plane, and teams keep using standard Kubernetes tooling. Amazon ECS is AWS's own container orchestrator and does not run Kubernetes manifests, and Amazon ECR only stores container images."
+    }
+  ]
+}
