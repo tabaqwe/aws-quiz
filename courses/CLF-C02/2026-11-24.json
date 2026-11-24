@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-24",
+  "title": "Daily CLF-C02 quiz — 2026-11-24",
+  "questions": [
+    {
+      "domain": "Security & Compliance",
+      "q": "A company's incident-response team works from a central security account. During an incident it must be able to investigate resources in any of the 40 member accounts in its AWS Organization. The company does not want long-term credentials for the team stored in the member accounts. What should the company do?",
+      "options": [
+        "Create IAM users with access keys for each responder in every member account and store the keys in AWS Secrets Manager",
+        "Add a resource-based policy that names the security account to every resource in each member account",
+        "Create an IAM role in each member account with a trust policy that allows the security account, and have responders assume the role through AWS STS",
+        "Share the root user credentials of each member account with the incident-response team"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Think about one identity per member account that people from another account can temporarily step into, covering every service, not just the ones that support resource policies.",
+      "explanation": "A cross-account IAM role trusted by the security account lets responders call AWS STS AssumeRole and receive temporary credentials with the role's permissions, so no IAM users or long-term keys live in member accounts. Resource-based policies only exist for some services (such as S3 buckets or KMS keys) and would have to be maintained on every single resource, so they cannot provide general investigative access.",
+      "homework": true,
+      "reviewOf": "2026-11-10#4"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A media company's publishing pipeline must transcode each uploaded video, generate subtitles and thumbnails in parallel, pause until an editor approves the result, and then publish it. Failed steps must be retried automatically, and operators want to see visually which step every video is currently in. Which AWS service should coordinate this pipeline?",
+      "options": [
+        "Amazon SNS",
+        "Amazon SQS",
+        "Amazon EventBridge",
+        "AWS Step Functions"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The service must remember where each video is in a multi-step process, including waiting for a person, rather than just delivering messages.",
+      "explanation": "AWS Step Functions orchestrates multi-step workflows as state machines with parallel branches, built-in retries and error handling, wait-for-callback steps for human approval, and a visual view of each execution. Amazon SNS is a pub/sub service that pushes a message to subscribers; it does not track the state of a workflow, wait for approvals or retry a sequence of steps.",
+      "homework": true,
+      "reviewOf": "2026-11-10#5"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company has 30 VPCs in several AWS accounts in one Region and has just ordered an AWS Direct Connect link to its data center. It wants every VPC to reach the other VPCs and the data center through a single central hub with centralized route tables, instead of managing a growing number of point-to-point connections. Which AWS service should act as that hub?",
+      "options": [
+        "AWS Transit Gateway",
+        "AWS Direct Connect",
+        "VPC peering",
+        "AWS Site-to-Site VPN"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "One option is just the physical link to the data center. Which one connects many VPCs to each other and to that link?",
+      "explanation": "AWS Transit Gateway is a regional hub that VPCs, VPN connections and Direct Connect (through a Direct Connect gateway) attach to, with central route tables controlling traffic between them. Direct Connect only provides the dedicated private link between the data center and AWS; it does not route traffic between VPCs.",
+      "homework": true,
+      "reviewOf": "2026-11-10#6"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company stores data in Amazon EBS volumes, Amazon RDS databases, Amazon DynamoDB tables and Amazon EFS file systems across several AWS accounts. Auditors require one central place to define backup schedules and retention rules, apply them to all of these resources, and report on backup compliance. Which service should the company use?",
+      "options": [
+        "AWS Storage Gateway",
+        "AWS Backup",
+        "Amazon S3 Glacier Deep Archive",
+        "AWS Elastic Disaster Recovery"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Look for a managed service built around backup plans and policies that spans many storage and database services.",
+      "explanation": "AWS Backup centrally manages and automates backups across services such as EBS, RDS, DynamoDB and EFS using backup plans, can be applied across accounts with AWS Organizations, and provides compliance reporting through AWS Backup Audit Manager. AWS Elastic Disaster Recovery replicates servers for fast failover; it is not a policy-based backup service for databases and file systems."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "Developers have hard-coded the password for an Amazon RDS database in an application's configuration file. The security team wants the password stored encrypted outside the code, retrieved by the application at runtime through an API call, and rotated automatically every 30 days. Which AWS service best meets these requirements?",
+      "options": [
+        "AWS Secrets Manager",
+        "AWS Key Management Service (AWS KMS)",
+        "AWS Certificate Manager (ACM)",
+        "Amazon Cognito"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "One service manages encryption keys; you need one that manages the credential itself and can change it on a schedule.",
+      "explanation": "AWS Secrets Manager stores secrets such as database credentials encrypted with KMS, lets applications fetch them at runtime, and has built-in automatic rotation, including native support for Amazon RDS. AWS KMS creates and manages encryption keys, but it does not store or rotate application passwords."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A fast-growing company wants to set up a new multi-account AWS environment quickly using AWS best practices. It wants a landing zone with a log archive and audit account created automatically, preventive and detective controls applied to new accounts, and a dashboard that shows which accounts are compliant. Which service should it use?",
+      "options": [
+        "AWS Organizations on its own",
+        "AWS Config",
+        "AWS Service Catalog",
+        "AWS Control Tower"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "One choice provides the building blocks for grouping accounts; another automates the whole well-architected setup on top of them.",
+      "explanation": "AWS Control Tower automates setting up a landing zone (including log archive and audit accounts), applies preventive and detective controls (guardrails) and shows compliance in a dashboard; it uses AWS Organizations, AWS Config and other services under the hood. AWS Organizations by itself lets you group accounts and apply SCPs, but it does not automatically build the landing zone or provide the controls dashboard."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's leadership sets a goal to reduce the environmental impact of its cloud workloads. Architects plan to measure resource usage, maximize utilization by removing idle capacity, choose Regions partly based on the carbon intensity of their power, and prefer managed services that share infrastructure. Which pillar of the AWS Well-Architected Framework focuses on these practices?",
+      "options": [
+        "Cost Optimization",
+        "Performance Efficiency",
+        "Sustainability",
+        "Operational Excellence"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Several of these steps also save money, but the stated goal is about something other than the bill.",
+      "explanation": "The Sustainability pillar focuses on minimizing the environmental impact of cloud workloads, with practices such as understanding your impact, maximizing utilization, choosing Regions wisely and using managed services. Cost Optimization shares some techniques, but its goal is delivering business value at the lowest price, not reducing environmental impact."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "During migration planning, a company's discovery of its 400 applications shows that 50 of them have had no users for more than a year and their functions are already covered by other systems. The company decides to shut these 50 applications down instead of moving them. Which migration strategy is it applying to them?",
+      "options": [
+        "Retain",
+        "Retire",
+        "Repurchase",
+        "Rehost"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Is the company keeping these applications where they are, or getting rid of them?",
+      "explanation": "Retire means decommissioning applications that are no longer useful, which reduces the migration scope and saves costs. Retain means deliberately keeping an application in its current environment for now (for example, because of a dependency or recent upgrade), not switching it off."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company wants to run a third-party next-generation firewall appliance on Amazon EC2. It wants to find a preconfigured version from a vendor, launch it in a few clicks, and pay for the software by the hour on its regular AWS bill rather than signing a separate contract. Where should it look?",
+      "options": [
+        "AWS Service Catalog",
+        "AWS License Manager",
+        "AWS Marketplace",
+        "AWS Artifact"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Think of a digital catalog where independent software vendors sell to AWS customers.",
+      "explanation": "AWS Marketplace is a curated catalog of third-party software that customers can subscribe to and deploy quickly, with charges (such as hourly usage fees) appearing on their AWS bill. AWS Service Catalog lets an organization publish its own approved products for internal teams; it is not a store for buying vendor software."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company is moving its 12 separate AWS accounts into AWS Organizations and enabling consolidated billing. Which TWO benefits will it gain from consolidated billing? (Choose two.)",
+      "options": [
+        "A single bill and payment method for all accounts in the organization",
+        "Free AWS Business Support for every member account",
+        "Member account charges are hidden from the management account",
+        "Combined usage across accounts counts toward volume pricing tiers, and Reserved Instance and Savings Plans discounts can be shared",
+        "Automatic rightsizing of EC2 instances in all member accounts"
+      ],
+      "answer": [
+        0,
+        3
+      ],
+      "hint": "Focus on what changes about how charges are added up and paid, not on support or operational features.",
+      "explanation": "Consolidated billing gives the management account one bill covering all member accounts and aggregates their usage, so the organization reaches volume discount tiers sooner and can share Reserved Instance and Savings Plans discounts. It does not include any free support plan, and the management account can see every member account's charges rather than having them hidden."
+    }
+  ]
+}
