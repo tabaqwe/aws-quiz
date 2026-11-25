@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-25",
+  "title": "Daily CLF-C02 quiz — 2026-11-25",
+  "questions": [
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A manufacturer wants to answer questions such as \"which finished products would be affected if a tier-3 supplier of a single component shut down?\" by following chains of supplier, part, assembly and product relationships several levels deep, with millisecond responses in an internal app. Which AWS database fits best?",
+      "options": [
+        "Amazon Redshift",
+        "Amazon Neptune",
+        "Amazon RDS for PostgreSQL",
+        "Amazon Timestream"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The core of the question is traversing connections many hops deep, not aggregating large volumes of rows for reports.",
+      "explanation": "Amazon Neptune is a managed graph database built to traverse highly connected data (supplier → part → assembly → product) quickly at any depth. Amazon Redshift is a data warehouse optimized for large analytical aggregations and BI reporting, not low-latency, multi-hop relationship queries.",
+      "homework": true,
+      "reviewOf": "2026-11-10#7"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company is moving a Windows Server workload to Amazon EC2 and will bring its existing Windows Server licenses, which are counted per physical core. For license audits it must report the physical server and core count its instances run on, and keep instances on the same physical server over time. Which EC2 purchasing option should it use?",
+      "options": [
+        "Spot Instances",
+        "Dedicated Instances",
+        "On-Demand Instances on shared tenancy",
+        "Dedicated Hosts"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Pick the option that gives you visibility into, and control over, the physical server itself, not just a discount or isolation.",
+      "explanation": "Dedicated Hosts give you a whole physical server with visibility into its sockets and cores and control over instance placement (host affinity), which is what per-core or per-socket BYOL licensing requires. Spot Instances only offer a discount on spare, interruptible capacity with no host visibility, and Dedicated Instances isolate hardware but don't expose or pin the physical host.",
+      "homework": true,
+      "reviewOf": "2026-11-10#8"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A developer accidentally left a large fleet of GPU instances running in a test account over a long weekend, and nobody noticed until the monthly bill arrived. Management wants AWS to learn the company's normal spending patterns, flag unusual cost increases soon after they start, show which service, account and Region caused them, and send email alerts. Which tool should the company use?",
+      "options": [
+        "AWS Cost Anomaly Detection",
+        "AWS Trusted Advisor",
+        "AWS Cost and Usage Report",
+        "AWS Pricing Calculator"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "You need something that learns what \"normal\" looks like for your spend and reacts to deviations, not a list of best-practice checks.",
+      "explanation": "AWS Cost Anomaly Detection uses machine learning on your historical spend to detect unusual cost spikes, provides root-cause analysis (service, account, Region, usage type) and sends alerts by email or Amazon SNS. Trusted Advisor checks resources against best practices (for example idle or underused resources) but does not learn spending patterns or alert on sudden cost spikes.",
+      "homework": true,
+      "reviewOf": "2026-11-10#9"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company's login page runs behind an Application Load Balancer. Bots are sending thousands of login attempts per minute from a small set of IP addresses, and the company also wants to block all requests from countries where it does not do business. Which service should it use?",
+      "options": [
+        "Security groups on the load balancer",
+        "Amazon GuardDuty",
+        "AWS WAF with a rate-based rule and a geographic match rule",
+        "Network ACLs on the load balancer's subnets"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Look for a service that inspects web requests at layer 7 and can count them per IP address and match their country of origin.",
+      "explanation": "AWS WAF attaches to an Application Load Balancer and can throttle or block IP addresses that exceed a request rate (rate-based rules) and block traffic by country (geo match). Security groups only support allow rules by IP, port and protocol, and cannot count requests or match countries."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A small team wants to deploy its Java web application by simply uploading the code. AWS should automatically handle capacity provisioning, load balancing, Auto Scaling and application health monitoring, while the team keeps full access to the underlying EC2 instances if needed. Which service fits best?",
+      "options": [
+        "AWS Elastic Beanstalk",
+        "Amazon Lightsail",
+        "AWS CloudFormation",
+        "AWS Outposts"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Think of the service where you bring the application and AWS provisions and manages the environment around it for you.",
+      "explanation": "AWS Elastic Beanstalk takes uploaded application code and automatically provisions and manages EC2 instances, load balancing, Auto Scaling and health monitoring, while you keep control of the underlying resources. CloudFormation provisions infrastructure from templates you write, but it does not deploy and run your application code for you as a managed platform."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's order database must lose almost no data in a Regional disaster, and the business can accept a recovery time of tens of minutes. To keep costs low, it does not want application servers running in the recovery Region during normal operations. Which disaster recovery strategy fits best?",
+      "options": [
+        "Backup and restore",
+        "Warm standby",
+        "Multi-site active/active",
+        "Pilot light"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Only the most critical core, the data, is kept live in the second Region; everything else is switched on when needed.",
+      "explanation": "Pilot light continuously replicates data and keeps core infrastructure ready in the recovery Region, while application servers are off and are started and scaled out only during a disaster, giving an RTO of tens of minutes at low cost. Warm standby keeps a scaled-down but fully running copy of the whole workload, which recovers faster but means application servers are always running."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company runs its database on Amazon RDS for MySQL. Under the AWS shared responsibility model, which task is AWS responsible for?",
+      "options": [
+        "Creating database users and granting them permissions",
+        "Patching the database engine and the underlying operating system",
+        "Configuring security group rules that control access to the DB instance",
+        "Deciding whether to enable encryption at rest for the DB instance"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "RDS is a managed service: think about what AWS hides from you, such as the host and OS you can't log in to.",
+      "explanation": "For Amazon RDS, AWS manages the infrastructure, host operating system and database engine patching (applied during the maintenance window you choose). The customer still owns database users and permissions, network access through security groups, and choices such as enabling encryption."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An online store's product catalog runs on Amazon RDS for MySQL. Most traffic is the same catalog pages being read over and over, which is overloading the database and slowing page loads. The company wants an in-memory layer that returns these repeated reads in sub-millisecond time. Which service should it add?",
+      "options": [
+        "Amazon DynamoDB Accelerator (DAX)",
+        "AWS Global Accelerator",
+        "Amazon ElastiCache",
+        "Amazon Redshift"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Look for a general-purpose in-memory cache (Redis/Valkey or Memcached compatible) that can sit in front of a relational database.",
+      "explanation": "Amazon ElastiCache provides a managed in-memory cache that stores frequently read data so repeated reads are served in sub-millisecond time and load is taken off the RDS database. DAX is also an in-memory cache, but it works only with Amazon DynamoDB, not with RDS for MySQL."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company's board asks what the business gains by moving from its own data centers to AWS. Which TWO are among the six advantages of cloud computing described by AWS? (Choose two.)",
+      "options": [
+        "AWS takes over all security responsibilities for the company's applications and data",
+        "Stop spending money running and maintaining data centers",
+        "Data transfer out to the internet becomes free of charge",
+        "Go global in minutes",
+        "Workloads no longer need any monitoring or capacity review"
+      ],
+      "answer": [
+        1,
+        3
+      ],
+      "hint": "Two of the options are real benefits; the others overstate what AWS does or what is free.",
+      "explanation": "AWS lists six advantages: trade fixed expense for variable expense, benefit from massive economies of scale, stop guessing capacity, increase speed and agility, stop spending money running and maintaining data centers, and go global in minutes. Security remains shared under the shared responsibility model, and data transfer out to the internet is generally charged."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company encrypts data in Amazon S3 and Amazon EBS. Its security policy requires that it can write the key policy that controls which IAM roles may use the key, turn on automatic yearly key rotation, and disable the key immediately during an incident, all without managing any hardware. Which option meets these requirements?",
+      "options": [
+        "An AWS managed key in AWS KMS (for example aws/s3)",
+        "Server-side encryption with Amazon S3 managed keys (SSE-S3)",
+        "An AWS CloudHSM cluster",
+        "A customer managed key in AWS KMS"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Several options encrypt the data; only one lets the customer control the key's policy and lifecycle without operating HSMs.",
+      "explanation": "A customer managed key in AWS KMS lets you write and change its key policy, enable automatic rotation, and disable or schedule deletion of the key, while AWS operates the underlying HSMs. AWS managed keys rotate automatically, but you cannot edit their key policies or disable them, and CloudHSM requires you to manage your own HSM cluster."
+    }
+  ]
+}
