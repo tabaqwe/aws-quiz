@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-26",
+  "title": "Daily CLF-C02 quiz — 2026-11-26",
+  "questions": [
+    {
+      "domain": "Cloud Concepts",
+      "q": "Six months after migrating to AWS, a retailer's workloads suffer from missed patch windows, untracked configuration drift and releases that go out without change control. Leadership wants a structured way to run these workloads day to day at the agreed quality. Which AWS Cloud Adoption Framework (AWS CAF) perspective addresses this?",
+      "options": [
+        "Governance",
+        "Platform",
+        "Operations",
+        "Business"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Think about who keeps the workloads running after go-live (patching, configuration, change and release), not who oversees the transformation program.",
+      "explanation": "The Operations perspective covers running cloud services at agreed levels, including patch, configuration, change and release, incident and capacity management. Governance is about steering the cloud program itself (program and project management, benefits, risk and cloud financial management), not the day-to-day operation of workloads.",
+      "homework": true,
+      "reviewOf": "2026-11-10#1"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "An IAM role used by an application on Amazon EC2 has two policies attached: the AWS managed policy AmazonSQSFullAccess, and a customer managed policy with a statement that denies sqs:DeleteQueue on all resources, with no conditions. The application calls DeleteQueue. What is the result?",
+      "options": [
+        "The call is denied, because an explicit deny in any applicable policy overrides an allow",
+        "The call is allowed, because the AWS managed policy takes precedence over customer managed policies",
+        "The call is denied only if the role's session was not authenticated with MFA",
+        "The call is allowed, because IAM applies the most permissive policy attached to the role"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Look closely at the deny statement: does it have any condition that could switch it off?",
+      "explanation": "IAM evaluation always lets an explicit deny win over any allow, regardless of which policy contains it, so DeleteQueue is denied. MFA only matters if a policy has an aws:MultiFactorAuthPresent condition; this deny has no conditions, so it applies every time.",
+      "homework": true,
+      "reviewOf": "2026-11-10#2"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company's policy requires automated backups to be enabled on every Amazon RDS DB instance in its accounts. It needs each DB instance evaluated whenever its configuration changes, a timeline of how each instance's settings changed, and noncompliant instances fixed automatically. Which solution meets all of these requirements?",
+      "options": [
+        "Review the AWS Trusted Advisor Amazon RDS Backups check each week",
+        "Enable AWS CloudTrail and search for ModifyDBInstance events",
+        "Use Amazon Inspector to scan the RDS DB instances",
+        "Use an AWS Config rule with automatic remediation through AWS Systems Manager Automation"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Three requirements: evaluation on every change, configuration history per resource, and an automatic fix. Which tool records resource configurations over time?",
+      "explanation": "AWS Config records each resource's configuration history, evaluates rules such as db-instance-backup-enabled when a change occurs, and can trigger Systems Manager Automation to remediate. Trusted Advisor can flag RDS instances without backups, but it is a periodic best-practice check with no per-resource configuration timeline and no automatic remediation of your own rules.",
+      "homework": true,
+      "reviewOf": "2026-11-10#3"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "An agriculture company is deploying 500,000 soil sensors that publish small readings over MQTT every few seconds. It needs a managed service that authenticates each device, accepts the messages at scale and routes them to other AWS services such as Amazon S3 and AWS Lambda using rules. Which service should it use?",
+      "options": [
+        "Amazon Simple Queue Service (Amazon SQS)",
+        "AWS IoT Core",
+        "Amazon API Gateway",
+        "AWS Direct Connect"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The devices speak MQTT and each one needs its own identity.",
+      "explanation": "AWS IoT Core securely connects devices using protocols such as MQTT, authenticates each device with certificates and uses a rules engine to route messages to S3, Lambda and other services. Amazon SQS is a message queue for decoupling application components; it does not provide MQTT connectivity or device identity."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company notices that an IP address belonging to Amazon EC2 is repeatedly trying to log in to its own on-premises mail server, and it believes the instance is being used for an attack. The instance is not in any of the company's accounts. What should the company do?",
+      "options": [
+        "Open a technical support case from its own AWS account under the Basic Support plan",
+        "Block the IP address in AWS WAF in its own account, which will stop the instance",
+        "Report the activity to the AWS Trust & Safety team using the abuse report form",
+        "Use Amazon GuardDuty in its own account to shut down the instance"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The resource belongs to someone else, so the company cannot act on it directly. AWS has a dedicated team for this kind of report.",
+      "explanation": "Suspected abuse of AWS resources, such as attacks, spam or malware from an AWS IP address, is reported to the AWS Trust & Safety team, which investigates and works with the resource owner. The company's own support plan, WAF or GuardDuty only act on its own accounts and resources, and Basic Support does not include technical support cases."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company's sales data is already stored in Amazon S3 and Amazon Redshift. Business managers, who do not write code or SQL, want interactive dashboards with charts and filters that they can share with their teams and open in a web browser. Which AWS service fits best?",
+      "options": [
+        "Amazon QuickSight",
+        "Amazon Athena",
+        "AWS Glue",
+        "Amazon EMR"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Who is the end user here, and what do they want to look at?",
+      "explanation": "Amazon QuickSight (now Quick Sight in Amazon Quick Suite) is the AWS business intelligence service for building and sharing interactive dashboards that non-technical users view in a browser. Amazon Athena runs SQL queries on data in S3; it returns query results but is not a dashboarding tool for users who don't write SQL."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company is building a total cost of ownership (TCO) comparison between its own data center and AWS. Which cost does the company pay directly on premises but is built into the price of AWS services?",
+      "options": [
+        "Licenses for commercial software that the company brings to AWS under bring your own license (BYOL)",
+        "Staff time spent designing the application architecture",
+        "Developer time spent changing application code",
+        "Power, cooling and physical security of the data center facility"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Which of these costs belongs to running the building and the hardware, rather than to the company's own software and people?",
+      "explanation": "On AWS, facility costs such as power, cooling, real estate and physical security are AWS's responsibility and are included in service prices, so they drop out of the customer's TCO. BYOL licenses are still paid by the customer, since the company brings and keeps paying for its own licenses."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A startup's account uses only the AWS Basic Support plan. Which TWO are included with Basic Support at no additional cost? (Choose two.)",
+      "options": [
+        "24/7 access to AWS customer service for account and billing questions",
+        "Technical support cases answered by AWS Cloud Support engineers",
+        "The AWS Health Dashboard, which shows events that may affect the account's resources",
+        "A designated Technical Account Manager (TAM)",
+        "Access to the full set of AWS Trusted Advisor checks"
+      ],
+      "answer": [
+        0,
+        2
+      ],
+      "hint": "Basic Support is free. It covers account and billing help and self-service tools, but not technical help from engineers.",
+      "explanation": "Every AWS account gets Basic Support, which includes 24/7 customer service for account and billing questions, documentation, AWS re:Post, the AWS Health Dashboard and a core set of Trusted Advisor checks. Technical support cases need a paid plan (Developer or higher), the full set of Trusted Advisor checks needs Business Support or higher, and a designated TAM comes only with Enterprise Support."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A call center records thousands of customer phone calls each day. It wants to convert the recordings into searchable text automatically so analysts can look for mentions of competitors. Which AWS service should it use first?",
+      "options": [
+        "Amazon Polly",
+        "Amazon Transcribe",
+        "Amazon Lex",
+        "Amazon Rekognition"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The input is audio and the output needs to be text.",
+      "explanation": "Amazon Transcribe uses automatic speech recognition to convert speech in audio files into text, which can then be searched or analyzed (for example with Amazon Comprehend). Amazon Polly works the other way: it turns text into lifelike speech."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company bought 3-year Standard Reserved Instances for Amazon EC2. After 18 months it moved the workload to AWS Lambda and no longer needs the reservations. What can it do to recover some of the remaining value?",
+      "options": [
+        "Ask AWS to cancel the Reserved Instances and refund the unused months",
+        "Convert the Standard Reserved Instances into a Compute Savings Plan",
+        "Sell the remaining term of the Reserved Instances on the Amazon EC2 Reserved Instance Marketplace",
+        "Change the Reserved Instances to Convertible Reserved Instances and apply them to Lambda"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "AWS doesn't refund reservations, but there is a place where other customers can take them over.",
+      "explanation": "Standard Reserved Instances can be listed for sale to other customers on the EC2 Reserved Instance Marketplace to recover part of their value. AWS does not cancel or refund RIs, Standard RIs cannot be converted into Savings Plans or Convertible RIs, and RIs never apply to Lambda."
+    }
+  ]
+}
