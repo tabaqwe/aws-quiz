@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-27",
+  "title": "Daily CLF-C02 quiz — 2026-11-27",
+  "questions": [
+    {
+      "domain": "Security & Compliance",
+      "q": "A company has hired a third-party cost-monitoring SaaS vendor. The vendor's platform, which runs in the vendor's own AWS account, needs read-only access to the company's AWS account to analyze resource usage across many services. The company does not want to hand the vendor any long-term access keys. What is the recommended way to grant this access?",
+      "options": [
+        "Create an IAM user for the vendor and email its access keys to the vendor's support team",
+        "Create an IAM role with read-only permissions whose trust policy allows the vendor's AWS account (with an external ID), and let the vendor assume it through AWS STS",
+        "Add bucket policies naming the vendor's account to every Amazon S3 bucket in the company's account",
+        "Invite the vendor's account into the company's AWS Organization so it inherits access automatically"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "You want something the vendor can temporarily step into from its own account, and it must cover many services, not just storage.",
+      "explanation": "A cross-account IAM role that trusts the vendor's account (protected by an external ID) lets the vendor call STS AssumeRole and get short-lived credentials for read-only access across all services, with no long-term keys. Bucket policies are resource-based policies that exist only on some resources such as S3 buckets, so they would cover only S3 and would need to be maintained bucket by bucket.",
+      "homework": true,
+      "reviewOf": "2026-11-10#4"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A bank's loan-application process must run a credit check, call an identity-verification API, wait (sometimes for days) until an underwriter approves or rejects the application, and then either issue the loan or send a rejection letter. Each step must be retried on failure, and support staff want to see exactly which step every application is at. Which AWS service should coordinate the process?",
+      "options": [
+        "Amazon Simple Notification Service (Amazon SNS)",
+        "Amazon Simple Queue Service (Amazon SQS)",
+        "AWS Step Functions",
+        "Amazon CloudWatch alarms"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "Look for the service that keeps track of the state of a long-running, multi-step process with branches, not one that just sends messages out.",
+      "explanation": "AWS Step Functions models the process as a state machine with branching (approve or reject), automatic retries, wait-for-callback steps that can pause for a human for up to a year, and a visual history of every execution. Amazon SNS only fans out notifications to subscribers; it has no memory of where an application is in the process and cannot wait for an approval or branch on the result.",
+      "homework": true,
+      "reviewOf": "2026-11-10#5"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "After acquiring two companies, a business now has 18 VPCs across several AWS accounts in one Region, and each of the three companies has its own on-premises data center connected by Site-to-Site VPN. Every VPC must be able to reach every other VPC and every data center. The team wants a central hub instead of managing dozens of point-to-point connections. Which AWS service should it use?",
+      "options": [
+        "VPC peering between every pair of VPCs",
+        "AWS Direct Connect",
+        "AWS Transit Gateway",
+        "Amazon CloudFront"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The problem is the number of connections between networks, not the speed or privacy of the link to the data center.",
+      "explanation": "AWS Transit Gateway is a regional hub that VPCs (across accounts) and VPN or Direct Connect connections attach to once, providing transitive routing between all of them. AWS Direct Connect is a dedicated private link between on premises and AWS; it does not by itself connect VPCs to each other or replace a mesh of connections.",
+      "homework": true,
+      "reviewOf": "2026-11-10#6"
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company wants to collect application log events from thousands of servers and load them into Amazon S3 and Amazon OpenSearch Service in near real time. It does not want to write or manage any consumer applications, and it wants the data batched, compressed and optionally transformed automatically before delivery. Which service fits best?",
+      "options": [
+        "Amazon Data Firehose",
+        "Amazon Kinesis Data Streams",
+        "AWS Glue",
+        "Amazon SQS"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "One of the streaming services delivers data to destinations for you; the other needs you to build the readers.",
+      "explanation": "Amazon Data Firehose (formerly Kinesis Data Firehose) is a fully managed delivery service that buffers, compresses, optionally transforms and loads streaming data into destinations such as S3, OpenSearch Service and Redshift with no consumer code. Kinesis Data Streams stores the stream for real-time processing, but you must build and run consumer applications to read it and write it anywhere."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company's security team wants to find out which of its Amazon S3 buckets, AWS KMS keys and IAM roles can be accessed by principals outside its AWS Organization, and to be told whenever a new policy grants such external access. Which AWS service provides this?",
+      "options": [
+        "AWS CloudTrail",
+        "Amazon GuardDuty",
+        "AWS Trusted Advisor",
+        "IAM Access Analyzer"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "The question is about analyzing what policies allow, not recording who already made API calls.",
+      "explanation": "IAM Access Analyzer uses automated reasoning on resource policies to identify resources shared with external entities outside the zone of trust (an account or organization) and generates findings when new external access is granted. AWS CloudTrail records API calls that have already happened; it does not evaluate policies to show who could access a resource."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company with 60 AWS accounts in AWS Organizations must make sure that no one in any member account, including users with full administrator permissions, can launch resources outside the two EU Regions it has approved. Which approach enforces this centrally?",
+      "options": [
+        "Attach a service control policy (SCP) to the organization's root or OUs that denies actions outside the approved Regions",
+        "Ask each account owner to remove other Regions from the AWS Management Console menu",
+        "Enable AWS CloudTrail in all Regions and review the logs weekly",
+        "Create an AWS Budgets alert for spending outside the approved Regions"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "You need a guardrail that sets the maximum permissions for whole accounts, which even an account's administrators cannot override.",
+      "explanation": "SCPs in AWS Organizations set the maximum available permissions for member accounts, so a Region-restricting deny applies to every IAM user and role in those accounts, administrators included. CloudTrail only records activity after it happens; it detects but does not prevent launches in unapproved Regions."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "An architecture team is reviewing a new image-processing workload against the Performance Efficiency pillar of the AWS Well-Architected Framework. Which TWO of the following are design principles of that pillar? (Choose two.)",
+      "options": [
+        "Stop guessing capacity",
+        "Use serverless architectures",
+        "Adopt a consumption model",
+        "Experiment more often",
+        "Apply security at all layers"
+      ],
+      "answer": [
+        1,
+        3
+      ],
+      "hint": "Look for the principles about using resources efficiently and trying out new instance types or services quickly.",
+      "explanation": "Performance Efficiency design principles are: democratize advanced technologies, go global in minutes, use serverless architectures, experiment more often, and consider mechanical sympathy. \"Stop guessing capacity\" belongs to Reliability, \"Adopt a consumption model\" to Cost Optimization, and \"Apply security at all layers\" to Security."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A company is starting its cloud adoption. Its architects want guidance on designing a multi-account landing zone, building reusable infrastructure-as-code templates, and standardizing CI/CD pipelines so application teams can build and deliver workloads consistently. Which AWS Cloud Adoption Framework (AWS CAF) perspective covers these capabilities?",
+      "options": [
+        "Operations",
+        "Governance",
+        "Business",
+        "Platform"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "This is about building the technical foundation that workloads are delivered on, not about running them day to day or managing risk.",
+      "explanation": "The AWS CAF Platform perspective covers building an enterprise-grade, scalable cloud platform: platform architecture and engineering, data architecture, provisioning and orchestration, CI/CD, and modern application development. The Operations perspective focuses on running and supporting workloads afterwards (observability, incident and problem management, capacity), not on designing and building the platform."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A mid-sized company runs business-critical workloads on AWS. It wants a response within 30 minutes when a business-critical system goes down, and access to a pool of Technical Account Managers who provide proactive guidance, but it does not need a designated TAM and wants to pay less than the top-tier plan. Which AWS Support plan fits best?",
+      "options": [
+        "Developer",
+        "Business",
+        "Enterprise On-Ramp",
+        "Enterprise"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "There is a plan between Business and the top tier that shares TAMs rather than assigning one to you.",
+      "explanation": "Enterprise On-Ramp includes a 30-minute response time for business-critical system down cases and access to a pool of Technical Account Managers. Enterprise adds a designated TAM and a 15-minute response for business-critical issues at a higher price, while Business has a 1-hour response for production system down and no TAM access."
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company's development accounts sometimes run up large bills when engineers forget about test resources. Finance wants AWS to automatically take action when actual spend reaches 100% of the monthly budget, such as applying a restrictive IAM policy or stopping specific Amazon EC2 instances, rather than only sending an email. Which feature should it use?",
+      "options": [
+        "AWS Cost Explorer forecasts",
+        "AWS Budgets with budget actions",
+        "AWS Cost and Usage Reports",
+        "Cost allocation tags"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Find the tool where a spending threshold can trigger something beyond a notification.",
+      "explanation": "AWS Budgets actions can run automatically (or after approval) when a budget threshold is crossed, applying an IAM policy or SCP or stopping targeted EC2 or RDS instances. Cost Explorer visualizes and forecasts spending but does not take any action when a limit is reached."
+    }
+  ]
+}
