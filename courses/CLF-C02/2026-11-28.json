@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-28",
+  "title": "Daily CLF-C02 quiz — 2026-11-28",
+  "questions": [
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A bank's anti-money-laundering system must spot rings of accounts that pass money to each other through several intermediary accounts. Each time a transfer is made, the app must follow the chain of sender and receiver relationships several hops deep and return a result in milliseconds. Which AWS database fits best?",
+      "options": [
+        "Amazon Redshift",
+        "Amazon DynamoDB",
+        "Amazon Neptune",
+        "Amazon Athena"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The workload is about following relationships between entities in real time, not running large aggregate reports over historical data.",
+      "explanation": "Amazon Neptune is a managed graph database that traverses many-hop relationships (account → transfer → account) with millisecond latency, ideal for fraud and money-laundering rings. Amazon Redshift is a data warehouse for large analytical queries and BI reports; it is not designed for low-latency, per-transaction relationship traversal.",
+      "homework": true,
+      "reviewOf": "2026-11-10#7"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A company will bring its own licenses for an enterprise database to AWS. The license is counted per physical CPU socket, and the vendor can audit which physical server the software runs on. To save money, a team member suggests running the database on the cheapest available EC2 capacity. Which EC2 option meets the licensing requirement?",
+      "options": [
+        "Dedicated Hosts",
+        "Spot Instances",
+        "On-Demand Instances with default (shared) tenancy",
+        "Compute Savings Plans applied to shared-tenancy instances"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "Price is secondary here; the licence requires you to see and control the physical server itself.",
+      "explanation": "Dedicated Hosts give you a dedicated physical server with visibility into its sockets and cores and control over instance placement, which per-socket BYOL licensing and audits require (and they can still be discounted with reservations or Savings Plans). Spot Instances are only a discount on spare, interruptible shared capacity and give no visibility into or control over the physical host.",
+      "homework": true,
+      "reviewOf": "2026-11-10#8"
+    },
+    {
+      "domain": "Billing, Pricing & Support",
+      "q": "A misconfigured application in one member account caused data transfer charges to triple for several days before anyone noticed. The FinOps team wants AWS to monitor spend per member account using machine learning, detect unusual increases soon after they begin, identify the likely root cause, and send a daily email summary, without maintaining fixed dollar thresholds for every account. Which tool should it use?",
+      "options": [
+        "AWS Trusted Advisor",
+        "AWS Budgets with a fixed monthly threshold for each account",
+        "Monthly AWS Cost Explorer reports reviewed by the finance team",
+        "AWS Cost Anomaly Detection"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "Look for the tool that learns what normal spend looks like and reacts to deviations, rather than one that checks resources against a best-practice list.",
+      "explanation": "AWS Cost Anomaly Detection uses machine learning on historical spend, supports monitors per linked account, service or cost category, provides root-cause analysis and sends individual or daily/weekly summary alerts. Trusted Advisor runs best-practice checks (for example idle resources) but does not learn spending patterns or alert on sudden cost spikes.",
+      "homework": true,
+      "reviewOf": "2026-11-10#9"
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company wants to automatically and continually scan its Amazon EC2 instances, container images in Amazon ECR and AWS Lambda functions for known software vulnerabilities (CVEs) and unintended network exposure, with findings prioritized by risk. Which AWS service should it use?",
+      "options": [
+        "Amazon GuardDuty",
+        "Amazon Inspector",
+        "Amazon Macie",
+        "Amazon Detective"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "The task is finding weaknesses in software packages before they are exploited, not detecting active threats.",
+      "explanation": "Amazon Inspector continuously scans EC2 instances, ECR container images and Lambda functions for software vulnerabilities and network reachability issues and assigns risk scores. Amazon GuardDuty detects active threats and suspicious behavior from logs such as CloudTrail, VPC Flow Logs and DNS logs; it does not scan software for CVEs in this way."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A company is launching a consumer mobile app that is expected to reach millions of users. Customers must be able to sign up and sign in with an email and password or with their Google or Apple accounts, and the app needs optional MFA and temporary AWS credentials to upload photos to Amazon S3. Which AWS service should provide the user directory and sign-in?",
+      "options": [
+        "IAM users, one for each customer",
+        "AWS IAM Identity Center",
+        "AWS Directory Service for Microsoft Active Directory",
+        "Amazon Cognito"
+      ],
+      "answer": [
+        3
+      ],
+      "hint": "These are your application's end customers, not your workforce or administrators.",
+      "explanation": "Amazon Cognito provides customer identity for web and mobile apps: user pools for sign-up/sign-in with social and enterprise federation and MFA, and identity pools for temporary AWS credentials. IAM Identity Center manages workforce access to AWS accounts and business applications, and IAM users are meant for a small number of people or workloads, not millions of app customers."
+    },
+    {
+      "domain": "Security & Compliance",
+      "q": "A new company has just created its AWS account. Which TWO actions follow AWS best practices for protecting the AWS account root user? (Choose two.)",
+      "options": [
+        "Create access keys for the root user so automation scripts can use full permissions",
+        "Enable multi-factor authentication (MFA) on the root user",
+        "Use the root user for daily administrative tasks to avoid permission errors",
+        "Share the root user password with all administrators through a shared spreadsheet",
+        "Use the root user only for the few tasks that require it, and use IAM roles or IAM Identity Center for everyday work"
+      ],
+      "answer": [
+        1,
+        4
+      ],
+      "hint": "Think about limiting both how the root user can be compromised and how often it is used at all.",
+      "explanation": "AWS recommends enabling MFA on the root user and using it only for the small set of tasks that require root (such as changing account settings), with everyday work done through IAM Identity Center or IAM roles. Creating root access keys is discouraged because they carry unrestricted permissions that cannot be limited by IAM policies."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A company runs its web application in the us-east-1 Region and keeps a static \"we'll be right back\" website in an Amazon S3 bucket in us-west-2. It wants DNS to automatically send users to the S3 site whenever health checks show the primary application is unhealthy. Which solution meets this requirement?",
+      "options": [
+        "Amazon CloudFront with a longer cache TTL",
+        "An Application Load Balancer spanning both Regions",
+        "Amazon Route 53 failover routing with health checks",
+        "AWS Direct Connect with a backup connection"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The requirement says the switch happens at the DNS level, based on health.",
+      "explanation": "Amazon Route 53 failover routing uses health checks on the primary record and automatically answers DNS queries with the secondary (the S3 static website) when the primary is unhealthy. An Application Load Balancer is a Regional service and cannot route traffic across Regions to an S3 website."
+    },
+    {
+      "domain": "Cloud Technology & Services",
+      "q": "A mobile game stores player profiles and session state as key-value items. Traffic can jump from a few thousand to millions of requests per second during events, each read must return in single-digit milliseconds, and the team does not want to manage database servers, patching or capacity planning. Which database should it use?",
+      "options": [
+        "Amazon RDS for MySQL",
+        "Amazon DynamoDB",
+        "Amazon Redshift",
+        "Amazon DocumentDB"
+      ],
+      "answer": [
+        1
+      ],
+      "hint": "Look for a serverless NoSQL option built for key-value access at virtually any scale.",
+      "explanation": "Amazon DynamoDB is a serverless key-value and document database that delivers single-digit-millisecond performance at virtually any scale, with on-demand capacity that absorbs spikes without server management. Amazon RDS for MySQL is a relational database running on DB instances you must size and scale, so it does not fit massive, spiky key-value traffic as easily."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "During migration, a company moves its on-premises MySQL database to Amazon RDS for MySQL so that AWS handles patching, backups and high availability. The application's code is not changed; only the connection string is updated. Which migration strategy is this?",
+      "options": [
+        "Replatform",
+        "Rehost",
+        "Refactor",
+        "Repurchase"
+      ],
+      "answer": [
+        0
+      ],
+      "hint": "It's more than a pure lift-and-shift onto a VM, but far less than redesigning the application.",
+      "explanation": "Replatforming (\"lift, tinker and shift\") makes a few cloud optimizations, such as moving to a managed database, without changing the application's core architecture. Rehosting would move the database as-is onto an EC2 instance, leaving the company to manage patching and backups itself."
+    },
+    {
+      "domain": "Cloud Concepts",
+      "q": "A team's development and test environments are only used about 40 hours a week, but they currently run 24/7. The team plans to stop them automatically outside working hours so it pays only for the capacity it actually uses. Which AWS Well-Architected Framework design principle does this follow?",
+      "options": [
+        "Perform operations as code (Operational Excellence)",
+        "Experiment more often (Performance Efficiency)",
+        "Adopt a consumption model (Cost Optimization)",
+        "Automatically recover from failure (Reliability)"
+      ],
+      "answer": [
+        2
+      ],
+      "hint": "The goal is paying for what you use, not making the system faster or more resilient.",
+      "explanation": "\"Adopt a consumption model\" is a Cost Optimization pillar principle: pay only for the resources you need, for example by stopping non-production environments outside working hours, which can cut their cost by about 75%. Performing operations as code (Operational Excellence) is about automating operations reliably; it can help implement the schedule but is not the cost principle being applied."
+    }
+  ]
+}
